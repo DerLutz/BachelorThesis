@@ -246,13 +246,7 @@ public class Activity2 extends AppCompatActivity {
                         break;
 
                     case MotionEvent.ACTION_UP:
-                        if (view == imageView1){
-                            Toast.makeText(Activity2.this, "imageView1", Toast.LENGTH_SHORT).show();
-                        }
 
-                        if (view == imageView2){
-                            Toast.makeText(Activity2.this, "imageView2", Toast.LENGTH_SHORT).show();
-                        }
                         Toast.makeText(Activity2.this,"thanks for new location!", Toast.LENGTH_SHORT).show();
                         break;
 

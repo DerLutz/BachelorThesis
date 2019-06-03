@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.BitmapDrawable;
 import android.media.ExifInterface;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -58,7 +59,7 @@ public class MainActivity extends Activity {
     Button GetImageFromGalleryButton, UploadImageOnServerButton, GetImageFromCameraButton, Rotate;
     ImageView ShowSelectedImage;
     Bitmap FixBitmap;
-    String ServerUploadPath ="http://192.168.56.1:1337/messages";
+    String ServerUploadPath ="http://192.168.56.1:1337/cornerDetection";
     ProgressDialog progressDialog ;
     ByteArrayOutputStream byteArrayOutputStream ;
     byte[] byteArray ;
@@ -128,6 +129,7 @@ public class MainActivity extends Activity {
         ShowSelectedImage = (ImageView)findViewById(R.id.imageView);
         GetImageFromCameraButton = (Button) findViewById(R.id.buttonP);
 
+        //ShowSelectedImage.setImageResource(R.drawable.example);
 
         byteArrayOutputStream = new ByteArrayOutputStream();
 
@@ -161,7 +163,13 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View view) {
 
-                UploadImageToServer();
+                //Bitmap bitmap = ((BitmapDrawable)ShowSelectedImage.getDrawable()).getBitmap();
+                if (FixBitmap != null){
+                    UploadImageToServer();
+                }
+                else{
+                    Toast.makeText(MainActivity.this, "No Image chosen", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -237,6 +245,7 @@ public class MainActivity extends Activity {
     }
 
     public void UploadImageToServer(){
+
 
         // Prepare image for upload
         FixBitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);

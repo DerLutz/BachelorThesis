@@ -45,7 +45,7 @@ public class Activity3 extends Activity {
     String uri;
     String TAG = "Activity3";
     String c1x, c1y, c2x, c2y, c3x, c3y, c4x, c4y, size_height, size_width;
-    String ServerUploadPath ="http://192.168.56.1:1337/messages";   //Todo correct path missing
+    String ServerUploadPath ="http://192.168.56.1:1337/cornerDetection";   //Todo correct path missing
     ProgressDialog progressDialog ;
     ByteArrayOutputStream byteArrayOutputStream ;
     byte[] byteArray ;
@@ -78,7 +78,7 @@ public class Activity3 extends Activity {
 
         Intent intent = getIntent();
 
-        uri = intent.getStringExtra(MainActivity.URI_FILE);
+        uri = intent.getStringExtra(Activity2.URI_FILE);
         Log.d(TAG, uri);
 
         try {
@@ -104,6 +104,7 @@ public class Activity3 extends Activity {
 
         Log.d(TAG, uri);
         picUri = Uri.parse(uri);
+
 
 
         try {
