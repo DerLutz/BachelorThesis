@@ -203,8 +203,8 @@ public class Activity2 extends AppCompatActivity {
         int test = relativeLayout.getWidth();
         Log.d(TAG, Integer.toString(test));
         RelativeLayout.LayoutParams layoutParams1 = new RelativeLayout.LayoutParams(60,60);
-        imageView1.setX(newc1x);
-        imageView1.setY(newc1y);
+        imageView1.setX(newc1x-30);     // -30 because x and y are top left corner of image; so x and y are middle point of image
+        imageView1.setY(newc1y-30);
 
 
         //second imageview (Top right corner)
@@ -214,8 +214,8 @@ public class Activity2 extends AppCompatActivity {
         imageView2.setId(id);
 
         RelativeLayout.LayoutParams layoutParams2 = new RelativeLayout.LayoutParams(60,60);
-        imageView2.setX(newc2x);
-        imageView2.setY(newc2y);
+        imageView2.setX(newc2x-30);
+        imageView2.setY(newc2y-30);
 
         //3. imageview (bottom left corner
         imageView3 = new ImageView(context);
@@ -224,8 +224,8 @@ public class Activity2 extends AppCompatActivity {
         imageView3.setId(id);
 
         RelativeLayout.LayoutParams layoutParams3 = new RelativeLayout.LayoutParams(60,60);
-        imageView3.setX(newc3x);
-        imageView3.setY(newc3y);
+        imageView3.setX(newc3x-30);
+        imageView3.setY(newc3y-30);
 
         //4. imageview (bottom right)
         imageView4 = new ImageView(context);
@@ -233,8 +233,8 @@ public class Activity2 extends AppCompatActivity {
         imageView4.setId(id);
 
         RelativeLayout.LayoutParams layoutParams4 = new RelativeLayout.LayoutParams(60,60);
-        imageView4.setX(newc4x);
-        imageView4.setY(newc4y);
+        imageView4.setX(newc4x-30);
+        imageView4.setY(newc4y-30);
 
         relativeLayout.addView(imageView1, layoutParams1);
         relativeLayout.addView(imageView2, layoutParams2);
@@ -310,21 +310,21 @@ public class Activity2 extends AppCompatActivity {
             Toast.makeText(this, "Crop started", Toast.LENGTH_SHORT).show();
             int[] locations = new int[2];
             imageView1.getLocationOnScreen(locations);
-            int x0 = locations[0];
-            int y0 = locations[1];
+            int x0 = locations[0]+30;       // +30 for correcting the -30 from the beginning;
+            int y0 = locations[1]+30;
 
 
             imageView2.getLocationOnScreen(locations);
-            int x1 = locations[0];
-            int y1 = locations[1];
+            int x1 = locations[0]+30;
+            int y1 = locations[1]+30;
 
             imageView3.getLocationOnScreen(locations);
-            int x2 = locations[0];
-            int y2 = locations[1];
+            int x2 = locations[0]+30;
+            int y2 = locations[1]+30;
 
             imageView4.getLocationOnScreen(locations);
-            int x3 = locations[0];
-            int y3 = locations[1];
+            int x3 = locations[0]+30;
+            int y3 = locations[1]+30;
 
             bitmap_height = bitmap.getHeight();
             bitmap_width = bitmap.getWidth();

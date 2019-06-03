@@ -3,12 +3,15 @@ package com.example.chris.myapplication;
 //import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
@@ -16,6 +19,8 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.opencv.android.Utils;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint2f;
@@ -23,6 +28,18 @@ import org.opencv.core.Point;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+import javax.net.ssl.HttpsURLConnection;
+
+//Todo at moment present image after cut, later upload image an present the text
 //Cut the image and stretch so we get only the recipe
 public class Activity3 extends Activity {
 
@@ -30,6 +47,19 @@ public class Activity3 extends Activity {
     String uri;
     String TAG = "Activity3";
     String c1x, c1y, c2x, c2y, c3x, c3y, c4x, c4y, size_height, size_width;
+    String ServerUploadPath ="http://192.168.56.1:1337/messages";   //Todo correct path missing
+    ProgressDialog progressDialog ;
+    ByteArrayOutputStream byteArrayOutputStream ;
+    byte[] byteArray ;
+    String ConvertImage ;
+    HttpURLConnection httpURLConnection ;
+    URL url;
+    OutputStream outputStream;
+    BufferedWriter bufferedWriter ;
+    int RC ;
+    BufferedReader bufferedReader ;
+    Bitmap FixBitmap;
+
 
     Bitmap newImage;
 
@@ -130,33 +160,14 @@ public class Activity3 extends Activity {
             Log.d(TAG, "AffineTransform done");
 
 
-            /*
-            //Affine Transform for 4. point (missing in the first)
-            srcTri[0] = new Point( height, 0 );
-            srcTri[1] = new Point( Integer.parseInt(c4x), Integer.parseInt(c4y) );
-            srcTri[2] = new Point( 0, 0 );
-
-            disTri[0] = new Point( height, 0 );
-            disTri[1] = new Point( 0, width );
-            disTri[2] = new Point( 0, 0 );
-
-            Utils.bitmapToMat(bitmap, original_image);
-            Log.d(TAG, "Mat2 created");
-
-            warpMat = Imgproc.getAffineTransform( new MatOfPoint2f(srcTri), new MatOfPoint2f(disTri) );
-
-            warpDst = Mat.zeros( original_image.rows(), original_image.cols(), original_image.type() );
-
-            //AffineTransform works only with 3 points
-            Log.d(TAG, "start AffineTransform2");
-            Imgproc.warpAffine( original_image, warpDst, warpMat, warpDst.size() );
-            Log.d(TAG, "AffineTransform2 done");*/
 
             Utils.matToBitmap(warpDst, bitmap);
+            FixBitmap = bitmap;
 
             // Bitmap rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
 
             ((ImageView)findViewById(R.id.image)).setImageBitmap(bitmap);
+
         }
         catch (Exception e){
             Log.d(TAG, "can not load image file");
@@ -188,4 +199,144 @@ public class Activity3 extends Activity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    public void UploadImageToServer(){
+
+        // Prepare image for upload
+        FixBitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+        byteArray = byteArrayOutputStream.toByteArray();
+        ConvertImage = Base64.encodeToString(byteArray, Base64.DEFAULT);
+
+        // Class for upload
+        class AsyncTaskUploadClass extends AsyncTask<Void,Void,String> {
+
+            @Override
+            protected void onPreExecute() {
+
+                super.onPreExecute();
+                progressDialog = ProgressDialog.show(Activity3.this,"Image is Uploading","Please Wait",false,false);
+            }
+
+            @Override
+            protected void onPostExecute(String string1) {
+                super.onPostExecute(string1);
+                progressDialog.dismiss();
+                Toast.makeText(Activity3.this,string1,Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            protected String doInBackground(Void... params) {
+
+
+                Activity3.ImageProcessClass imageProcessClass = new Activity3.ImageProcessClass();
+
+                /* If some extra information should be add to upload stream. Not used at the moment
+                HashMap<String,String> HashMapParams = new HashMap<String,String>();
+                HashMapParams.put(ImageTag, GetImageNameFromEditText+".jpg");
+                HashMapParams.put(ImageName, ConvertImage);
+                Log.d("Upload", "ConvertImage: "+ConvertImage);
+                Log.d("Upload", "ImageName: "+ImageName);
+                Log.d("Upload", "ImageTag: "+ImageTag);
+                Log.d("Upload", "EditText: "+GetImageNameFromEditText); */
+
+                // Alternative for HashMap
+                //ContentValues data= new ContentValues();
+
+                //data.put("ImageName",ImageName);
+                //data.put("ImageTag", GetImageNameFromEditText);
+                //datas.put("File", file+".jpg");
+                Log.d(TAG, "set data");
+
+                //Data for upload
+                String FinalData = imageProcessClass.ImageHttpRequest(ServerUploadPath, ConvertImage);
+                return FinalData;
+            }
+        }
+        AsyncTaskUploadClass AsyncTaskUploadClassOBJ = new AsyncTaskUploadClass();
+        AsyncTaskUploadClassOBJ.execute();
+
+    }
+
+    public class ImageProcessClass {
+
+        public String ImageHttpRequest(String requestURL, String PData) {
+            StringBuilder stringBuilder = new StringBuilder();
+            try {
+
+
+                //Create Connection
+                url = new URL(requestURL);
+                httpURLConnection = (HttpURLConnection) url.openConnection();
+                httpURLConnection.setReadTimeout(30000);
+                httpURLConnection.setConnectTimeout(30000);
+                httpURLConnection.setRequestMethod("POST");
+                httpURLConnection.setRequestProperty("Content-Type", "image/jpeg");
+                httpURLConnection.setDoInput(true);
+                httpURLConnection.setDoOutput(true);
+
+                outputStream = httpURLConnection.getOutputStream();
+                bufferedWriter = new BufferedWriter(
+                        new OutputStreamWriter(outputStream, "UTF-8"));
+                bufferedWriter.write((PData));
+
+                bufferedWriter.flush();
+                bufferedWriter.close();
+                outputStream.close();
+
+
+                /*if (PData != null) {              //For ContentValue
+                    OutputStream ostream = httpURLConnection.getOutputStream();
+                    BufferedWriter writer = new BufferedWriter(
+                            new OutputStreamWriter(ostream, "UTF-8"));
+                    StringBuilder requestresult = new StringBuilder();
+                    boolean first = true;
+                    for (Map.Entry<String, Object> entry : PData.valueSet()) {
+                        if (first)
+                            first = false;
+                        else
+                            requestresult.append("&");
+                        requestresult.append(URLEncoder.encode(entry.getKey(), "UTF-8"));
+                        requestresult.append("=");
+                        requestresult.append(URLEncoder.encode(entry.getValue().toString(), "UTF-8"));
+                    }
+                    writer.write(requestresult.toString());
+                    writer.flush();
+                    writer.close();
+                    ostream.close();
+                }*/
+
+                //Receive answer from server
+                RC = httpURLConnection.getResponseCode();
+                if (RC == HttpsURLConnection.HTTP_OK) {
+                    bufferedReader = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream()));
+                    stringBuilder = new StringBuilder();
+                    String RC2;
+                    while ((RC2 = bufferedReader.readLine()) != null) {
+                        stringBuilder.append(RC2);
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            Log.d(TAG, "Answer corner detection: " + stringBuilder.toString());
+
+            //Read JSON
+            try {
+                JSONObject json = new JSONObject(stringBuilder.toString());
+
+                /* Example
+                c1x = json.getJSONArray("corner1").getJSONObject(0).getString("x");
+                size_height = json.getJSONArray("size").getJSONObject(0).getString("height"); */
+
+
+                Log.d(TAG, "JSON ausgelesen");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return stringBuilder.toString();
+        }
+    }
+
+
 }

@@ -93,7 +93,7 @@ public class MainActivity extends Activity {
     Button GetImageFromGalleryButton, UploadImageOnServerButton, GetImageFromCameraButton, Rotate;
     ImageView ShowSelectedImage;
     Bitmap FixBitmap;
-    String ServerUploadPath ="http://192.168.188.63:1337/messages";
+    String ServerUploadPath ="http://192.168.56.1:1337/messages";
     ProgressDialog progressDialog ;
     ByteArrayOutputStream byteArrayOutputStream ;
     byte[] byteArray ;
