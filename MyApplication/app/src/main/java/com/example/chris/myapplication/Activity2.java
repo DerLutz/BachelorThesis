@@ -2,26 +2,18 @@ package com.example.chris.myapplication;
 
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
-import android.graphics.BitmapShader;
-import android.graphics.Canvas;
 import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.graphics.Path;
-import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.FocusFinder;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -30,19 +22,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-
-import com.theartofdev.edmodo.cropper.CropImage;
-import com.theartofdev.edmodo.cropper.CropImageView;
-
-import org.opencv.android.Utils;
-import org.opencv.core.Mat;
-import org.opencv.core.MatOfPoint2f;
-import org.opencv.core.Point;
-import org.opencv.core.Scalar;
-import org.opencv.imgproc.Imgproc;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 
 //compare the detected points with the real corners and correct them when necessary
 public class Activity2 extends AppCompatActivity {
@@ -55,8 +34,6 @@ public class Activity2 extends AppCompatActivity {
     private int xDelta;
     private int yDelta;
     int id;
-    int minI, minJ, maxI, maxJ;
-    int newMinI, newMinJ, newMaxI, newMaxJ;
     int bitmap_height, bitmap_width;
     ImageView imageView1;
     ImageView imageView2;
@@ -64,7 +41,6 @@ public class Activity2 extends AppCompatActivity {
     ImageView imageView4;
     String TAG = "Activity2";
     Bitmap bitmap;
-    Bitmap newImage;
     float ratio_height;
     float ratio_width;
     int height_bar;
@@ -74,7 +50,6 @@ public class Activity2 extends AppCompatActivity {
 
     String uri;
     int height, width;
-    float height2, width2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -355,25 +330,10 @@ public class Activity2 extends AppCompatActivity {
 
             Log.d(TAG, "crop started");
 
-            //coordinates named clockwise starting with top left
-            /*bitmap = processImage(bitmap, (int)(x0*ratio_height), (int) (y0*ratio_width1-height_bar),
-                    (int) (x1*ratio_height), (int) (y1*ratio_width1-height_bar),
-                    (int) (x3*ratio_height), (int) (y3*ratio_width2),
-                    (int) (x2*ratio_height), (int) (y2*ratio_width2));
-            ((ImageView)findViewById(R.id.image)).setImageBitmap(bitmap);*/
-
 
             //TODO richtige Paramter übergeben
             Intent start3Activity = new Intent(this, Activity3.class);
             start3Activity.putExtra(URI_FILE, uri);
-            /*start3Activity.putExtra(X0, Integer.toString((int)(x0*ratio_height)));
-            start3Activity.putExtra(Y0, Integer.toString((int)(y0*ratio_width1-height_bar)));
-            start3Activity.putExtra(X1, Integer.toString((int)(x1*ratio_height)));
-            start3Activity.putExtra(Y1, Integer.toString((int)(y1*ratio_width1-height_bar)));
-            start3Activity.putExtra(X2, Integer.toString((int)(x3*ratio_height)));
-            start3Activity.putExtra(Y2, Integer.toString((int)(y3*ratio_width2)));
-            start3Activity.putExtra(X3, Integer.toString((int)(x2*ratio_height)));
-            start3Activity.putExtra(Y3, Integer.toString((int)(y2*ratio_width2)));*/
 
             // difference between MainActivity and Activity2 when moveable points are not moved
             // calculated manuel by measuring differences
@@ -405,117 +365,7 @@ public class Activity2 extends AppCompatActivity {
 
             Log.d(TAG, "Start Activity3");
             startActivity(start3Activity);
-/*
-            newX0 = x0*ratio_height;
-            newX1 = x1*ratio_height;
-            newX2 = x2*ratio_height;
-            newX3 = x3*ratio_height;
-            newY0 = y0*ratio_width1-height_bar;
-            newY1 = y1*ratio_width1-height_bar;
-            newY2 = y2*ratio_width2;
-            newY3 = y3*ratio_width2;
-            // compute height and with of new image, as as longest edges
-            float newHeight1 = (float)Math.sqrt((Math.pow(newX2-newX1,2)+Math.pow((newY2-newY1),2)));
-            float newHeight2 = (float)Math.sqrt((Math.pow(newX0-newX3,2)+Math.pow((newY0-newY3),2)));
-            float newHeight = Math.max(newHeight1, newHeight2);
-
-            float newWidth1 = (float)Math.sqrt((Math.pow(newX3-newX2,2)+Math.pow((newY3-newY2),2)));
-            float newWidth2 = (float)Math.sqrt((Math.pow(newX0-newX1,2)+Math.pow((newY0-newY1),2)));
-            float newWidth = Math.max(newWidth1, newWidth2);
-
-            Log.d(TAG, "new Height: "+ Float.toString(newHeight));
-            Log.d(TAG, "new Width: "+ Float.toString(newWidth));
-
-            //Only 3 points
-            Point[] srcTri = new Point[4];
-            srcTri[0] = new Point( x0*ratio_height, y0*ratio_width1-height_bar );
-            srcTri[1] = new Point( x1*ratio_height, y1*ratio_width1-height_bar );
-            srcTri[2] = new Point( x3*ratio_height, y3*ratio_width1 );
-            srcTri[3] = new Point( x2*ratio_height, y2*ratio_width1 );
-
-
-
-            height2 = bitmap.getHeight();
-            width2 = bitmap.getWidth();
-
-            Point[] disTri = new Point[4];
-            disTri[0] = new Point( 0, 0 );
-            disTri[1] = new Point( width2, 0 );
-            disTri[2] = new Point( width2, height2-(height_bar*ratio_height) );
-            disTri[3] = new Point( 0, height2-(height_bar*ratio_height) );
-
-            Mat original_image = new Mat();
-            Utils.bitmapToMat(bitmap, original_image);
-            Log.d(TAG, "Mat created");
-
-            Imgproc.circle(original_image, new Point(x0*ratio_height, y0*ratio_width1-height_bar), 10, new Scalar(255, 0, 0), 10, 8, 0);
-            Imgproc.circle(original_image, new Point(x1*ratio_height, y1*ratio_width1-height_bar), 10, new Scalar(255, 0, 0), 10, 8, 0);
-            Imgproc.circle(original_image, new Point(x3*ratio_height, y3*ratio_width1), 10, new Scalar(255, 0, 0), 10, 8, 0);
-
-            Mat warpMat = Imgproc.getPerspectiveTransform(new MatOfPoint2f(srcTri), new MatOfPoint2f(disTri));
-//            Mat warpMat = Imgproc.getAffineTransform( new MatOfPoint2f(srcTri), new MatOfPoint2f(disTri) );
-
-            Mat warpDst = Mat.zeros( original_image.rows(), original_image.cols(), original_image.type() );
-
-            Imgproc.warpPerspective(original_image, warpDst, warpMat, warpDst.size());
-            Log.d(TAG, "start AffineTransform");
-            //Imgproc.warpAffine( original_image, warpDst, warpMat, warpDst.size() );
-            Log.d(TAG, "AffineTransform done");
-
-
-            /*srcTri[0] = new Point( 0,0 );
-            srcTri[1] = new Point( x1*ratio_height, 0);
-            srcTri[2] = new Point( newWidth, newHeight );
-            //srcTri[3] = new Point( x3, y3 );
-
-            height2 = bitmap.getHeight();
-            width2 = bitmap.getWidth();
-
-            disTri[0] = new Point( 0, 0 );
-            disTri[1] = new Point( newWidth,0 );
-            disTri[2] = new Point( newWidth, newHeight );
-            //disTri[3] = new Point( height2, width2 );
-
-            original_image = warpDst;
-            //Utils.bitmapToMat(bitmap, original_image);
-            Log.d(TAG, "Mat created");
-
-            Imgproc.circle(original_image, new Point(x0*ratio_height, y0*ratio_width1-height_bar), 10, new Scalar(255, 0, 0), 10, 8, 0);
-            Imgproc.circle(original_image, new Point(x1*ratio_height, y1*ratio_width1-height_bar), 10, new Scalar(255, 0, 0), 10, 8, 0);
-            Imgproc.circle(original_image, new Point(x3*ratio_height, y3*ratio_width2), 10, new Scalar(255, 0, 0), 10, 8, 0);
-
-            warpMat = Imgproc.getAffineTransform( new MatOfPoint2f(srcTri), new MatOfPoint2f(disTri) );
-
-            warpDst = Mat.zeros( original_image.rows(), original_image.cols(), original_image.type() );
-
-            Log.d(TAG, "start AffineTransform");
-            Imgproc.warpAffine( original_image, warpDst, warpMat, warpDst.size() );*/
-/*
-            Utils.matToBitmap(warpDst, bitmap);
-            //coordinates named clockwise starting with top left
-            /*bitmap = processImage(bitmap, (int)(0), (int) (0),
-                    (int) (0), (int) (bitmap_height),
-                    (int) (newWidth), (int) (bitmap_height),
-                    (int) (newWidth), (int) (0));
-            ((ImageView)findViewById(R.id.image)).setImageBitmap(bitmap);*/
-  /*          ((ImageView)findViewById(R.id.image)).setImageBitmap(bitmap);
-
-
-            //TODO bitmap to uri
-            //String uri = getImageUri(this, bitmap);
-
-            //Log.d(TAG, uri);
-
-            //String uri = picUri.toString();
-            //Intent changeActivity = new Intent(this, Activity3.class);
-            //changeActivity.putExtra("Uri", uri);
-            //Log.d(TAG, "start Activity3");
-            //startActivity(changeActivity);
-
-            // TODO stretch image therewith it is a rectangle again then croprequest (+activityOnResult part)
-
-            //croprequest(picUri, minJ, minI, maxJ, maxI);
-        */}
+}
 
         if (id==R.id.back){
             Intent intent = new Intent(this, MainActivity.class);
@@ -524,84 +374,4 @@ public class Activity2 extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
-    //CROP REQUEST JAVA
-    private void croprequest(Uri imageUri, int left, int top, int right, int bottom) {
-
-        Rect rect = new Rect();
-        rect.set(left,top, right, bottom);
-
-
-        Log.d("MyApplication", "in croprequest");
-        CropImage.activity(imageUri)
-                .setGuidelines(CropImageView.Guidelines.ON)
-                .setMultiTouchEnabled(true)
-                .setInitialCropWindowRectangle(rect)
-                .start(this);
-    }
-
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d(TAG, "onActivityResult started");
-        //if (requestCode == CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            Log.d(TAG, "in first if");
-            //if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
-                Log.d(TAG, "test");
-                CropImage.ActivityResult result = CropImage.getActivityResult(data);
-                Log.d(TAG, "test2");
-                if (resultCode == RESULT_OK) {
-                    try {
-                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), result.getUri());
-
-                        String uri = result.getUri().toString();
-                        Intent changeActivity = new Intent(this, Activity3.class);
-                        changeActivity.putExtra("Uri", uri);
-                        Log.d(TAG, "start Activity3");
-                        startActivity(changeActivity);
-                        //((ImageView) findViewById(R.id.picture)).setImageBitmap(bitmap);
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-              //  }
-            //}
-        }
-    }
-
-
-    /*public Bitmap processImage(Bitmap bitmap, int x0, int y0, int x1, int y1, int x2, int y2, int x3, int y3) {
-        Bitmap bmp;
-
-        bmp = Bitmap.createBitmap(bitmap.getWidth(),
-                bitmap.getHeight(), Bitmap.Config.ARGB_8888);
-        BitmapShader shader = new BitmapShader(bitmap,
-                BitmapShader.TileMode.CLAMP,
-                BitmapShader.TileMode.CLAMP);
-
-        //float radius = Math.min(bitmap.getWidth(),bitmap.getHeight()) / RADIUS_FACTOR;
-        Canvas canvas = new Canvas(bmp);
-        Paint paint = new Paint();
-        paint.setAntiAlias(true);
-        paint.setShader(shader);
-
-        /*RectF rect = new RectF(TRIANGLE_WIDTH, 0,
-                bitmap.getWidth(), bitmap.getHeight());
-        canvas.drawRoundRect(rect, radius, radius, paint);*/
-/*
-        Path path = new Path();
-        path.moveTo(x0, y0);
-        path.lineTo(x1, y1);
-        path.lineTo(x2, y2);
-        path.lineTo(x3, y3);
-        path.close();
-        canvas.drawPath(path, paint);
-
-        return bmp;
-    }
-
-    public String getImageUri(Context inContext, Bitmap inImage) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
-        return path;
-    }*/
 }

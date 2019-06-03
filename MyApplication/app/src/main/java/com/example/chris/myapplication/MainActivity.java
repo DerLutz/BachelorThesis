@@ -1,47 +1,28 @@
 package com.example.chris.myapplication;
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.media.ExifInterface;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Environment;
-//import androidx.core.content.FileProvider;
-//import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
-
-import android.security.NetworkSecurityPolicy;
 import android.util.Base64;
-import android.view.MotionEvent;
 import android.view.View;
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.*;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.ColorMatrix;
-import android.graphics.ColorMatrixColorFilter;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-//import com.theartofdev.edmodo.cropper.CropImage;
-//import com.theartofdev.edmodo.cropper.CropImageView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
@@ -53,38 +34,22 @@ import org.json.JSONObject;
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
-import org.opencv.android.Utils;
-import org.opencv.core.Core;
-import org.opencv.core.Mat;
-import org.opencv.core.Scalar;
-import org.opencv.imgproc.Imgproc;
-import org.opencv.core.Size;
-import org.opencv.core.Point;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 
 import javax.net.ssl.HttpsURLConnection;
-
-import static org.opencv.core.Core.NORM_MINMAX;
 
 //Select an image or make a photo, upload it to the server to detect the corner and receive the results
 
@@ -302,6 +267,7 @@ public class MainActivity extends Activity {
                 ImageProcessClass imageProcessClass = new ImageProcessClass();
 
                 /* If some extra information should be add to upload stream. Not used at the moment
+
                 HashMap<String,String> HashMapParams = new HashMap<String,String>();
                 HashMapParams.put(ImageTag, GetImageNameFromEditText+".jpg");
                 HashMapParams.put(ImageName, ConvertImage);
@@ -354,27 +320,6 @@ public class MainActivity extends Activity {
                 bufferedWriter.close();
                 outputStream.close();
 
-
-                /*if (PData != null) {              //For ContentValue
-                    OutputStream ostream = httpURLConnection.getOutputStream();
-                    BufferedWriter writer = new BufferedWriter(
-                            new OutputStreamWriter(ostream, "UTF-8"));
-                    StringBuilder requestresult = new StringBuilder();
-                    boolean first = true;
-                    for (Map.Entry<String, Object> entry : PData.valueSet()) {
-                        if (first)
-                            first = false;
-                        else
-                            requestresult.append("&");
-                        requestresult.append(URLEncoder.encode(entry.getKey(), "UTF-8"));
-                        requestresult.append("=");
-                        requestresult.append(URLEncoder.encode(entry.getValue().toString(), "UTF-8"));
-                    }
-                    writer.write(requestresult.toString());
-                    writer.flush();
-                    writer.close();
-                    ostream.close();
-                }*/
 
                 //Receive answer from server
                 RC = httpURLConnection.getResponseCode();
