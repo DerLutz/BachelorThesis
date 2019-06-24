@@ -335,7 +335,7 @@ public class Activity3 extends Activity {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            Log.d(TAG, "Answer corner detection: " + stringBuilder.toString());
+            Log.d(TAG, "Answer tesseract: " + stringBuilder.toString());
 
             //Read JSON
             try {
@@ -346,7 +346,7 @@ public class Activity3 extends Activity {
                 size_height = json.getJSONArray("size").getJSONObject(0).getString("height"); */
 
 
-                Log.d(TAG, "JSON ausgelesen");
+                Log.d(TAG, "JSON read");
             } catch (JSONException e) {
                 e.printStackTrace();
                 Log.d(TAG, "No JSON readed");

@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.ExifInterface;
 import android.os.AsyncTask;
@@ -189,14 +190,6 @@ public class MainActivity extends Activity {
                 ShowSelectedImage.setImageBitmap(FixBitmap);
                 Log.d("Upload","image chosen");
                 file = uri.toString();
-                Log.d(TAG, uri.toString());
-
-                file1 = new File(file);
-                ExifInterface ei = new ExifInterface(file1.toString());
-                orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
-                        ExifInterface.ORIENTATION_UNDEFINED);
-
-                Log.d(TAG, "Orientation: "+orientation);
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -373,7 +366,7 @@ public class MainActivity extends Activity {
                 size_width = json.getJSONArray("size").getJSONObject(0).getString("width");
 
 
-                Log.d(TAG, "JSON ausgelesen");
+                Log.d(TAG, "JSON read");
             }
             catch (JSONException e) {
                 e.printStackTrace();
@@ -535,4 +528,6 @@ public class MainActivity extends Activity {
         AlertDialog alert = alertBuilder.create();
         alert.show();
     }
+
+
 }
