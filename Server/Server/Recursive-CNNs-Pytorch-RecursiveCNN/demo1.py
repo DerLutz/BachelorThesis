@@ -8,7 +8,7 @@ from werkzeug.utils import secure_filename
 import evaluation
 
 # Speicherort
-folder = "/home/christopher/Documents/Server/Recursive-CNNs-Pytorch-RecursiveCNN"
+folder = "/Users/chris/Documents/Bachelorarbeit/Server/Server/Recursive-CNNs-Pytorch-RecursiveCNN"
 extensions = set(['jpg', 'JPEG', 'png'])
 
 app = Flask(__name__)
@@ -30,14 +30,15 @@ def index():
 		if allowed(file.filename):
 			filename = secure_filename(file.filename) #security against bad filenames
 			file.save(os.path.join(folder, filename))
+			os.remove('Image.jpeg')
 			os.rename(filename, 'Image.jpeg')
 
 			#input for using demo.py part
 
 			imagePath = 'Image.jpeg'
 			retainFactor = 0.85
-			cornerModel = "/home/christopher/Documents/Server/CornerTraining/nonamecorner_resnet.pb"
-			documentModel = "/home/christopher/Documents/Server/DocumentTraining/nonamedocument_resnet.pb"
+			cornerModel = "/Users/chris/Documents/Bachelorarbeit/Server/Server/CornerTraining/nonamecorner_resnet.pb"
+			documentModel = "/Users/chris/Documents/Bachelorarbeit/Server/Server/DocumentTraining/nonamedocument_resnet.pb"
 			outputPath = "../output.jpg"
 
 			corners_extractor = evaluation.corner_extractor.GetCorners(documentModel)
@@ -112,4 +113,4 @@ def test():
 	return "Test"
 
 if __name__ == '__main__':
-	app.run(host='192.168.56.1',port=1337, debug=False, threaded=True) #True shows all Errors (for develop), later change to False, threaded=True for multithreating
+	app.run(host='192.168.89.189',port=1337, debug=False, threaded=True) #True shows all Errors (for develop), later change to False, threaded=True for multithreating

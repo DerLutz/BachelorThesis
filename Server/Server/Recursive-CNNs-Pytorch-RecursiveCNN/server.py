@@ -10,7 +10,7 @@ import evaluation
 
 app = Flask(__name__)
 
-folder = "/home/christopher/Documents/Server/Recursive-CNNs-Pytorch-RecursiveCNN"
+folder = "/Users/chris/Documents/Bachelorarbeit/Server/Server/Recursive-CNNs-Pytorch-RecursiveCNN"
 
 def from_base64(buf):
     print(sys.getsizeof(buf))
@@ -90,12 +90,11 @@ def corner_detection():
 
 
 @app.route('/cornerDetection', methods = ['POST', 'GET'])
-def api_messag():
+def cornerDetection():
 
 	if request.headers['Content-Type'] == 'application/x-www-form-urlencoded':
 		data = request.data.decode('utf-8')
-		print(type(data))
-		print(type(request.data))
+	    
 		#data += "=" * ((4 - len(data) % 4) % 4)
 		#imgdata = base64.b64decode(data)
 		#print(type(imgdata))
@@ -140,4 +139,4 @@ def api_messag():
 		return '415 unsupported media type'
 
 if __name__ == '__main__':
-	app.run(host='192.168.56.1',port=1337, debug=False, threaded=True) #True shows all Errors (for develop), later change to False, threaded=True for multithreating
+	app.run(host='192.168.89.189',port=1337, debug=False, threaded=True) #True shows all Errors (for develop), later change to False, threaded=True for multithreating
