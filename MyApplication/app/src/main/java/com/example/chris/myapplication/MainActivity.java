@@ -59,7 +59,7 @@ public class MainActivity extends Activity {
     Button GetImageFromGalleryButton, UploadImageOnServerButton, GetImageFromCameraButton, Rotate;
     ImageView ShowSelectedImage;
     Bitmap FixBitmap;
-    String ServerUploadPath ="http://192.168.56.1:1337/cornerDetection";
+    String ServerUploadPath ="http://192.168.89.189:1337/cornerDetection";
     ProgressDialog progressDialog ;
     ByteArrayOutputStream byteArrayOutputStream ;
     byte[] byteArray ;
@@ -68,7 +68,7 @@ public class MainActivity extends Activity {
     URL url;
     OutputStream outputStream;
     BufferedWriter bufferedWriter ;
-    int RC ;
+    int RC, orientation;
     BufferedReader bufferedReader ;
     String file;
     Uri uri;
@@ -83,7 +83,7 @@ public class MainActivity extends Activity {
 
 
     //For the call of Activity 2
-    public static String URI_FILE="URI_FILE", X1="X1",X2="X2", X3="X3", X4="X4", Y1="Y1", Y2="Y2", Y3="Y3", Y4="Y4", SH="SH", SW="SW";
+    public static String URI_FILE="URI_FILE", X1="X1",X2="X2", X3="X3", X4="X4", Y1="Y1", Y2="Y2", Y3="Y3", Y4="Y4", SH="SH", SW="SW", O="O";
     String c1x, c1y, c2x, c2y, c3x, c3y, c4x, c4y, size_height, size_width;
 
 
@@ -190,6 +190,14 @@ public class MainActivity extends Activity {
                 Log.d("Upload","image chosen");
                 file = uri.toString();
                 Log.d(TAG, uri.toString());
+
+                file1 = new File(file);
+                ExifInterface ei = new ExifInterface(file1.toString());
+                orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                        ExifInterface.ORIENTATION_UNDEFINED);
+
+                Log.d(TAG, "Orientation: "+orientation);
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -207,7 +215,7 @@ public class MainActivity extends Activity {
 
                 Log.d(TAG, "File: "+uri.getPath());
                 ExifInterface ei = new ExifInterface(file1.toString());
-                int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
                         ExifInterface.ORIENTATION_UNDEFINED);
 
                 Bitmap rotatedBitmap = null;
@@ -381,7 +389,7 @@ public class MainActivity extends Activity {
 
                 //Bottom right
                 c3x = "709";
-                c3y = "1311";
+                c3y = "791";
 
                 //Top right
                 c4x = "666";
@@ -412,6 +420,7 @@ public class MainActivity extends Activity {
             changeActivity.putExtra(Y2, c2y);
             changeActivity.putExtra(Y3, c3y);
             changeActivity.putExtra(Y4, c4y);
+            changeActivity.putExtra(O, Integer.toString(orientation));
 
             changeActivity.putExtra(SH, size_height);
             changeActivity.putExtra(SW, size_width);

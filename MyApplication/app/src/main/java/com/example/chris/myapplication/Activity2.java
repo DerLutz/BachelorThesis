@@ -46,9 +46,9 @@ public class Activity2 extends AppCompatActivity {
     int height_bar;
     String c1x, c1y, c2x, c2y, c3x, c3y, c4x, c4y, size_height, size_width;
     float newc1x, newc1y, newc2x, newc2y, newc3x, newc3y, newc4x, newc4y;
-    public static String X0 ="X0", X1 ="X1", X2 ="X2", X3 ="X3", URI="URI", Y0="Y0", Y1="Y1", Y2="Y2", Y3="Y3", URI_FILE="URI_FILE", IMG_HEIGHT="IMG_HEIGHT", IMG_WIDTH="IMG_WIDTH";
+    public static String X0 ="X0", X1 ="X1", X2 ="X2", X3 ="X3", URI="URI", Y0="Y0", Y1="Y1", Y2="Y2", Y3="Y3", URI_FILE="URI_FILE", IMG_HEIGHT="IMG_HEIGHT", IMG_WIDTH="IMG_WIDTH", O="O";
 
-    String uri;
+    String uri, orientation;
     int height, width;
 
     @Override
@@ -81,6 +81,9 @@ public class Activity2 extends AppCompatActivity {
 
             size_height = intent.getStringExtra(MainActivity.SH);
             size_width = intent.getStringExtra(MainActivity.SW);
+
+            orientation= intent.getStringExtra(MainActivity.O);
+            Log.d(TAG, "Orientation: "+orientation);
         }
         catch (Exception e){
             e.printStackTrace();
@@ -356,6 +359,7 @@ public class Activity2 extends AppCompatActivity {
             start3Activity.putExtra(IMG_HEIGHT, Integer.toString(height));
             start3Activity.putExtra(IMG_WIDTH, Integer.toString(width));
 
+            start3Activity.putExtra(O, orientation);
 
             Log.d(TAG, "Start Activity3");
             startActivity(start3Activity);

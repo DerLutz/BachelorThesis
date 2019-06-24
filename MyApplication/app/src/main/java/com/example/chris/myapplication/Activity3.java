@@ -6,6 +6,8 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -29,6 +31,7 @@ import org.opencv.imgproc.Imgproc;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -45,7 +48,7 @@ public class Activity3 extends Activity {
     String uri;
     String TAG = "Activity3";
     String c1x, c1y, c2x, c2y, c3x, c3y, c4x, c4y, size_height, size_width;
-    String ServerUploadPath ="http://192.168.56.1:1337/cornerDetection";   //Todo correct path missing
+    String ServerUploadPath ="http://192.168.178.34:1337/cornerDetection";   //Todo correct path missing
     ProgressDialog progressDialog ;
     ByteArrayOutputStream byteArrayOutputStream ;
     byte[] byteArray ;
@@ -54,7 +57,7 @@ public class Activity3 extends Activity {
     URL url;
     OutputStream outputStream;
     BufferedWriter bufferedWriter ;
-    int RC ;
+    int RC, orientation;
     BufferedReader bufferedReader ;
     Bitmap FixBitmap;
 
@@ -95,6 +98,8 @@ public class Activity3 extends Activity {
 
             size_height = intent.getStringExtra(Activity2.IMG_HEIGHT);
             size_width = intent.getStringExtra(Activity2.IMG_WIDTH);
+
+            orientation =  Integer.parseInt(intent.getStringExtra(Activity2.O));
         }
         catch (Exception e){
             e.printStackTrace();
@@ -120,6 +125,8 @@ public class Activity3 extends Activity {
             float ratio_width = bmp_width/((float) Integer.parseInt(size_width));
 
 
+            //bitmap = rotatedBitmap;
+
             Mat original_image = new Mat();
             Utils.bitmapToMat(bitmap, original_image);
 
@@ -142,12 +149,19 @@ public class Activity3 extends Activity {
             srcTri[3] = new Point( Integer.parseInt(c4x)*ratio_width, Integer.parseInt(c4y)*ratio_height );
 
             //Where the points should be
+
             Point[] disTri = new Point[4];
             disTri[0] = new Point( 0, 0 );
-            disTri[2] = new Point( 0, original_image.rows() );
-            disTri[1] = new Point( original_image.cols(), 0 );
+            disTri[1] = new Point( 0, original_image.rows() );
+            disTri[2] = new Point( original_image.cols(), 0 );
             disTri[3] = new Point( original_image.cols(), original_image.rows() );
 
+            if (orientation == 0){
+                disTri[0] = new Point( 0, 0 );
+                disTri[2] = new Point( 0, original_image.rows() );
+                disTri[1] = new Point( original_image.cols(), 0 );
+                disTri[3] = new Point( original_image.cols(), original_image.rows() );
+            }
 
             Mat warpMat = Imgproc.getPerspectiveTransform(new MatOfPoint2f(srcTri), new MatOfPoint2f(disTri));
             //Mat warpMat = Imgproc.getPerspectiveTransform( new MatOfPoint2f(srcTri), new MatOfPoint2f(disTri) );
@@ -161,6 +175,9 @@ public class Activity3 extends Activity {
 
 
             Utils.matToBitmap(warpDst, bitmap);
+
+
+
             FixBitmap = bitmap;
 
             // Bitmap rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
@@ -174,6 +191,7 @@ public class Activity3 extends Activity {
             Toast.makeText(Activity3.this, "Can not load image file",Toast.LENGTH_SHORT).show();
         }
 
+        //UploadImageToServer();
 
     }
 
@@ -331,11 +349,20 @@ public class Activity3 extends Activity {
                 Log.d(TAG, "JSON ausgelesen");
             } catch (JSONException e) {
                 e.printStackTrace();
+                Log.d(TAG, "No JSON readed");
             }
 
             return stringBuilder.toString();
         }
     }
 
+
+
+    public static Bitmap rotateImage(Bitmap source, float angle) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(),
+                matrix, true);
+    }
 
 }
