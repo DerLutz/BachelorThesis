@@ -8,9 +8,19 @@
     <Button
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:text="Select"
+        android:id="@+id/buttonS"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
         android:text="Gallery"
         android:id="@+id/buttonG"
-        android:layout_alignParentTop="true"
+        android:layout_below="@+id/buttonS"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 

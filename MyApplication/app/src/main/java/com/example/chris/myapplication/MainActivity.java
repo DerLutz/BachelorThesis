@@ -57,10 +57,10 @@ import javax.net.ssl.HttpsURLConnection;
 
 public class MainActivity extends Activity {
 
-    Button GetImageFromGalleryButton, UploadImageOnServerButton, GetImageFromCameraButton, Rotate;
+    Button GetImageFromGalleryButton, UploadImageOnServerButton, GetImageFromCameraButton, SelectButton;
     ImageView ShowSelectedImage;
     Bitmap FixBitmap;
-    String ServerUploadPath ="http://192.168.89.189:1337/cornerDetection";
+    String ServerUploadPath ="http://192.168.89.183:1337/cornerDetection";
     ProgressDialog progressDialog ;
     ByteArrayOutputStream byteArrayOutputStream ;
     byte[] byteArray ;
@@ -125,14 +125,47 @@ public class MainActivity extends Activity {
 
 
         // Define variables from activity_main.xml
-        GetImageFromGalleryButton = (Button)findViewById(R.id.buttonG);
-        UploadImageOnServerButton = (Button)findViewById(R.id.buttonU);
-        ShowSelectedImage = (ImageView)findViewById(R.id.imageView);
+        GetImageFromGalleryButton = (Button) findViewById(R.id.buttonG);
+        UploadImageOnServerButton = (Button) findViewById(R.id.buttonU);
+        ShowSelectedImage = (ImageView) findViewById(R.id.imageView);
         GetImageFromCameraButton = (Button) findViewById(R.id.buttonP);
-
+        SelectButton = (Button) findViewById(R.id.buttonS);
         //ShowSelectedImage.setImageResource(R.drawable.example);
 
         byteArrayOutputStream = new ByteArrayOutputStream();
+
+        SelectButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setCancelable(true);
+                builder.setTitle("Select");
+                builder.setMessage("Camera or Gallaery");
+                builder.setPositiveButton("Camera",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dispatchTakePictureIntent();
+                            }
+                        });
+                builder.setNegativeButton("Gallery", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent intent = new Intent();
+                            intent.setType("image/*");
+                            intent.setAction(Intent.ACTION_GET_CONTENT);
+                            intent.addCategory(Intent.CATEGORY_OPENABLE);
+                            startActivityForResult(Intent.createChooser(intent, "Select Image From Gallery"), 1);
+
+                    }
+                });
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+    });
+
 
         //Button Get Image from Gallery clicked
         GetImageFromCameraButton.setOnClickListener(new View.OnClickListener() {
@@ -401,7 +434,7 @@ public class MainActivity extends Activity {
                 file = MediaStore.Images.Media.insertImage(MainActivity.this.getContentResolver(), FixBitmap, "Title", null);
             }
 
-            Intent changeActivity = new Intent(MainActivity.this, Activity2.class);
+            Intent changeActivity = new Intent(MainActivity.this, CornerActivity.class);
 
 
             changeActivity.putExtra("URI_FILE", file);

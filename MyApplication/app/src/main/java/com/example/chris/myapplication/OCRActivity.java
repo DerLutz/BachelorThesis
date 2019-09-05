@@ -43,11 +43,11 @@ import javax.net.ssl.HttpsURLConnection;
 
 //Todo at moment present image after cut, later upload image an present the text
 //Cut the image and stretch so we get only the recipe
-public class Activity3 extends Activity {
+public class OCRActivity extends Activity {
 
     Uri picUri;
     String uri;
-    String TAG = "Activity3";
+    String TAG = "OCRActivity";
     String c1x, c1y, c2x, c2y, c3x, c3y, c4x, c4y, size_height, size_width;
     String ServerUploadPath ="http://192.168.89.183:1337/ocr";
     ProgressDialog progressDialog ;
@@ -189,7 +189,7 @@ public class Activity3 extends Activity {
         catch (Exception e){
             Log.d(TAG, "can not load image file");
             e.printStackTrace();
-            Toast.makeText(Activity3.this, "Can not load image file",Toast.LENGTH_SHORT).show();
+            Toast.makeText(OCRActivity.this, "Can not load image file",Toast.LENGTH_SHORT).show();
         }
 
         UploadImageToServer();
@@ -232,21 +232,21 @@ public class Activity3 extends Activity {
             protected void onPreExecute() {
 
                 super.onPreExecute();
-                progressDialog = ProgressDialog.show(Activity3.this,"Image is Uploading","Please Wait",false,false);
+                progressDialog = ProgressDialog.show(OCRActivity.this,"Image is Uploading","Please Wait",false,false);
             }
 
             @Override
             protected void onPostExecute(String string1) {
                 super.onPostExecute(string1);
                 progressDialog.dismiss();
-                Toast.makeText(Activity3.this,string1,Toast.LENGTH_LONG).show();
+                Toast.makeText(OCRActivity.this,string1,Toast.LENGTH_LONG).show();
             }
 
             @Override
             protected String doInBackground(Void... params) {
 
 
-                Activity3.ImageProcessClass imageProcessClass = new Activity3.ImageProcessClass();
+                OCRActivity.ImageProcessClass imageProcessClass = new OCRActivity.ImageProcessClass();
 
                 /* If some extra information should be add to upload stream. Not used at the moment
                 HashMap<String,String> HashMapParams = new HashMap<String,String>();
