@@ -14,6 +14,8 @@ import android.os.Environment;
 import android.os.Bundle;
 
 import android.util.Base64;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -24,12 +26,15 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
+//import android.support.v7.widget.RecyclerView
 
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -55,7 +60,14 @@ import javax.net.ssl.HttpsURLConnection;
 
 //Select an image or make a photo, upload it to the server to detect the corner and receive the results
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity
+        implements CategoryRecView.ListItemClickListener {
+
+    //Todo passe Anzahl an Categorien an
+    private static final int NUM_LIST_ITEMS = 100;
+    static String TAG = "MainActivity";
+    //For calling next side
+    static String TOTAL = "TOTAL", NAME="NAME";
 
     Button GetImageFromGalleryButton, UploadImageOnServerButton, GetImageFromCameraButton, SelectButton;
     ImageView ShowSelectedImage;
@@ -73,15 +85,14 @@ public class MainActivity extends Activity {
     BufferedReader bufferedReader ;
     String file;
     Uri uri;
-    static String TAG = "MainActivity";
     String uri_string;
     String mCurrentPhotoPath;
     int REQUEST_TAKE_PHOTO = 4;
     File file1;
     public static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 123;
 
-
-
+    private CategoryRecView mAdapter;
+    private RecyclerView mNumbersList;
 
     //For the call of Activity 2
     public static String URI_FILE="URI_FILE", X1="X1",X2="X2", X3="X3", X4="X4", Y1="Y1", Y2="Y2", Y3="Y3", Y4="Y4", SH="SH", SW="SW", O="O";
@@ -125,11 +136,9 @@ public class MainActivity extends Activity {
 
 
         // Define variables from activity_main.xml
-        GetImageFromGalleryButton = (Button) findViewById(R.id.buttonG);
-        UploadImageOnServerButton = (Button) findViewById(R.id.buttonU);
-        ShowSelectedImage = (ImageView) findViewById(R.id.imageView);
-        GetImageFromCameraButton = (Button) findViewById(R.id.buttonP);
         SelectButton = (Button) findViewById(R.id.buttonS);
+        mNumbersList = (RecyclerView) findViewById(R.id.rv_numbers);
+
         //ShowSelectedImage.setImageResource(R.drawable.example);
 
         byteArrayOutputStream = new ByteArrayOutputStream();
@@ -167,45 +176,81 @@ public class MainActivity extends Activity {
     });
 
 
-        //Button Get Image from Gallery clicked
-        GetImageFromCameraButton.setOnClickListener(new View.OnClickListener() {
+        /*
+         * A LinearLayoutManager is responsible for measuring and positioning item views within a
+         * RecyclerView into a linear list. This means that it can produce either a horizontal or
+         * vertical list depending on which parameter you pass in to the LinearLayoutManager
+         * constructor. By default, if you don't specify an orientation, you get a vertical list.
+         * In our case, we want a vertical list, so we don't need to pass in an orientation flag to
+         * the LinearLayoutManager constructor.
+         *
+         * There are other LayoutManagers available to display your data in uniform grids,
+         * staggered grids, and more! See the developer documentation for more details.
+         */
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        mNumbersList.setLayoutManager(layoutManager);
 
-            @Override
-            public void onClick(View view) {
+        /*
+         * Use this setting to improve performance if you know that changes in content do not
+         * change the child layout size in the RecyclerView
+         */
+        mNumbersList.setHasFixedSize(true);
 
-                dispatchTakePictureIntent();
+        // COMPLETED (13) Pass in this as the ListItemClickListener to the CategoryRecView constructor
+        /*
+         * The CategoryRecView is responsible for displaying each item in the list.
+         */
+        mAdapter = new CategoryRecView(NUM_LIST_ITEMS, this);
+        mNumbersList.setAdapter(mAdapter);
+    }
 
-            }
-        });
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
 
-        GetImageFromGalleryButton.setOnClickListener(new View.OnClickListener() {
+        int itemId = item.getItemId();
 
-            @Override
-            public void onClick(View view) {
+        switch (itemId) {
+            /*
+             * When you click the reset menu item, we want to start all over
+             * and display the pretty gradient again. There are a few similar
+             * ways of doing this, with this one being the simplest of those
+             * ways. (in our humble opinion)
+             */
+            case R.id.action_refresh:
+                // COMPLETED (14) Pass in this as the ListItemClickListener to the CategoryRecView constructor
+                mAdapter = new CategoryRecView(NUM_LIST_ITEMS, this);
+                mNumbersList.setAdapter(mAdapter);
+                return true;
+        }
 
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                intent.addCategory(Intent.CATEGORY_OPENABLE);
-                startActivityForResult(Intent.createChooser(intent, "Select Image From Gallery"), 1);
-            }
-        });
+        return super.onOptionsItemSelected(item);
+    }
 
-        //Button Upload clicked
-        UploadImageOnServerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+    // COMPLETED (10) Override ListItemClickListener's onListItemClick method
+    /**
+     * This is where we receive our callback from
+     * {@link com.example.chris.myapplication.CategoryRecView.ListItemClickListener}
+     *
+     * This callback is invoked when you click on an item in the list.
+     *
+     * @param clickedItemIndex Index in the list of the item that was clicked.
+     */
+    @Override
+    public void onListItemClick(int clickedItemIndex) {
 
-                //Bitmap bitmap = ((BitmapDrawable)ShowSelectedImage.getDrawable()).getBitmap();
-                if (FixBitmap != null){
-                    UploadImageToServer();
-                }
-                else{
-                    Toast.makeText(MainActivity.this, "No Image chosen", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+        //Todo get summe of receipts of category
+        Intent changeActivity = new Intent(MainActivity.this, CategoryInfo.class);
+        changeActivity.putExtra(TOTAL, Integer.toString(clickedItemIndex));
+        changeActivity.putExtra(NAME, Categories.getCategory(clickedItemIndex));
+
+        Log.d(TAG, "start ReceiptRecView");
+        startActivity(changeActivity);
 
     }
 
@@ -220,9 +265,9 @@ public class MainActivity extends Activity {
 
             try {
                 FixBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-                ShowSelectedImage.setImageBitmap(FixBitmap);
                 Log.d("Upload","image chosen");
                 file = uri.toString();
+                UploadImageToServer();
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -266,11 +311,9 @@ public class MainActivity extends Activity {
                         rotatedBitmap = FixBitmap;
                 }
 
-
-                ShowSelectedImage.setImageBitmap(rotatedBitmap);    //rotatedBitmap
-                Log.d("Upload","image chosen");
-                Log.d(TAG, uri.toString());
                 FixBitmap = rotatedBitmap;
+
+                UploadImageToServer();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -336,6 +379,7 @@ public class MainActivity extends Activity {
         AsyncTaskUploadClassOBJ.execute();
 
     }
+
 
     public class ImageProcessClass{
 
@@ -452,7 +496,7 @@ public class MainActivity extends Activity {
             changeActivity.putExtra(SW, size_width);
             //changeActivity.putExtra("URI", uri);
             Log.d(TAG, uri.toString());
-            Log.d(TAG, "start Activity2");
+            Log.d(TAG, "start CornerActivity");
             startActivity(changeActivity);
 
             return stringBuilder.toString();

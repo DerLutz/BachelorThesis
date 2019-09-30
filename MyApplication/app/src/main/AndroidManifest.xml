@@ -15,7 +15,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".OCRActivity"></activity>
+        <activity android:name=".Receipt"></activity>
+        <activity android:name=".CategoryInfo" />
+        <activity android:name=".OCRActivity" />
         <activity android:name=".CornerActivity" />
         <activity android:name=".Activity3" />
         <activity android:name=".Activity2" />
