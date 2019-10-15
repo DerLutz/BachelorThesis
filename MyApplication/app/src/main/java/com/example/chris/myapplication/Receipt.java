@@ -1,15 +1,23 @@
 package com.example.chris.myapplication;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Layout;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+
+import static android.widget.RelativeLayout.TRUE;
 
 public class Receipt extends AppCompatActivity {
 
@@ -75,19 +83,49 @@ public class Receipt extends AppCompatActivity {
 
 
     public void init() {
-            TableLayout ll = (TableLayout) findViewById(R.id.table);
+        TableLayout ll = (TableLayout) findViewById(R.id.table);
 
-            for (int i = 0; i < 16; i++) {
+        int red = Color.parseColor("#FF0000");
+        //ll.setLayoutParams(new TableLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 3f));
+        //ll.setBackgroundColor(red);
+
+        for (int i = 0; i < 16; i++) {
 
                 TableRow row = new TableRow(this);
-                TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+                TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT);
                 row.setLayoutParams(lp);
+                row.setPadding(10, 10, 10, 10);
                 TextView product = new TextView(this);
                 TextView price = new TextView(this);
-                product.setText("product name" + i);
+                product.setText("product name " + i);
                 price.setText("€ 10");
-                row.addView(product);
-                row.addView(price);
+                product.setTextSize(25);
+                price.setTextSize(25);
+                int id =1;
+                product.setId(id);
+
+                //RelativeLayout rl = new RelativeLayout(this);
+
+                //RelativeLayout.LayoutParams params_price = new RelativeLayout.LayoutParams(RelativeLayout.ALIGN_PARENT_RIGHT, TRUE);
+
+                //params_price.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, TRUE);
+                //params_price.addRule(RelativeLayout.RIGHT_OF, 1);
+
+                LinearLayout rl = new LinearLayout(this);
+                /*LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
+                        RelativeLayout.LayoutParams.WRAP_CONTENT,
+                        RelativeLayout.LayoutParams.WRAP_CONTENT,
+                        3.0f
+                );
+                rl.setLayoutParams(param);*/
+                //product.setLayoutParams(new TableLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 2f));
+                LinearLayout.LayoutParams params = new TableLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 8f);
+
+
+            rl.addView(product, params);
+                rl.addView(price);
+
+                row.addView(rl);
                 ll.addView(row, i);
             }
         }}

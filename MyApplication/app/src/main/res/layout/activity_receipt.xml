@@ -11,7 +11,9 @@
         android:id="@+id/name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="12dp"
+        android:padding="16dp"
+        android:textSize="30sp"
+        android:layout_centerHorizontal="true"
         android:textAllCaps="true" />
 
     <RelativeLayout
@@ -23,6 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="10dp"
+            android:textSize="20sp"
             android:text="Date" />
 
         <TextView
@@ -31,26 +34,29 @@
             android:text="Total"
             android:id="@+id/total"
             android:padding="10dp"
+            android:textSize="20sp"
             android:layout_alignParentRight="true"/>
 
-    </RelativeLayout>
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/date">
         <TableLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/table">
+            android:id="@+id/table"
+            android:weightSum="10">
 
 
-            <!-- Example for TableRow in xml
+            <!-- Example for TableRow in xml -->
             <TableRow>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
-                    android:text="Product2s name is larger"/>
+                    android:text="Product2s name is larger"
+                    android:layout_weight="2"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -59,13 +65,10 @@
                     android:text="Price"/>
             </TableRow>
 
-            <TableRow>
-            ...
-            </TableRow>
-
-            -->
 
         </TableLayout>
 
     </ScrollView>
+    </RelativeLayout>
+
 </LinearLayout>
