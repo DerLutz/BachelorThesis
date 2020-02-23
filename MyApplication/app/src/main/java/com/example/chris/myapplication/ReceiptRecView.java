@@ -1,6 +1,7 @@
 package com.example.chris.myapplication;
 
 import android.content.Context;
+import android.os.StrictMode;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,9 +10,27 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+import javax.net.ssl.HttpsURLConnection;
+
 public class ReceiptRecView extends RecyclerView.Adapter<ReceiptRecView.NumberViewHolder> {
 
-        private static final String TAG = ReceiptRecView.class.getSimpleName();
+    HttpURLConnection httpURLConnection;
+    URL url;
+    OutputStream outputStream;
+    BufferedWriter bufferedWriter;
+    int RC, orientation;
+    BufferedReader bufferedReader;
+    StringBuilder stringBuilder;
+
+    private static final String TAG = ReceiptRecView.class.getSimpleName();
 
         // COMPLETED (3) Create a final private ListItemClickListener called mOnClickListener
         /*
@@ -72,6 +91,7 @@ public class ReceiptRecView extends RecyclerView.Adapter<ReceiptRecView.NumberVi
 
             //Todo add values
             viewHolder.viewHolderIndex.setText("Total: " + viewHolderCount);
+            Log.d(TAG, "Test Line 75");
 
             //Todo Background Color
             //int backgroundColorForViewHolder = ColorUtils.getViewHolderBackgroundColorFromInstance(context, viewHolderCount);
@@ -161,4 +181,47 @@ public class ReceiptRecView extends RecyclerView.Adapter<ReceiptRecView.NumberVi
                 mOnClickListener.onListItemClick(clickedPosition);
             }
         }
+    public StringBuilder connectServerData (){
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        //Create Connection
+        try{
+            String ServerUploadPath ="http://192.168.188.67:1337/getData";
+            url = new URL(ServerUploadPath);
+            httpURLConnection = (HttpURLConnection) url.openConnection();
+            httpURLConnection.setReadTimeout(30000);
+            httpURLConnection.setConnectTimeout(30000);
+            httpURLConnection.setRequestMethod("POST");
+            httpURLConnection.setRequestProperty("Content-Type", "text/plain");
+            //httpURLConnection.setDoInput(true);
+            httpURLConnection.setDoOutput(true);
+
+            outputStream = httpURLConnection.getOutputStream();
+            bufferedWriter = new BufferedWriter(
+                    new OutputStreamWriter(outputStream, "UTF-8"));
+            String send = "Receipt";
+            //send = send + "\n" + name;
+            bufferedWriter.write((send));
+
+            bufferedWriter.flush();
+            bufferedWriter.close();
+            outputStream.close();
+
+
+            //Receive answer from server
+            RC = httpURLConnection.getResponseCode();
+            if (RC == HttpsURLConnection.HTTP_OK) {
+                bufferedReader = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream()));
+                stringBuilder = new StringBuilder();
+                String RC2;
+                while ((RC2 = bufferedReader.readLine()) != null){
+                    stringBuilder.append(RC2);
+                }
+            }
+            Log.d(TAG, "Answer data category: " + stringBuilder.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return stringBuilder;
+    }
     }

@@ -147,9 +147,10 @@ public class Recyclerview extends RecyclerView.Adapter<Recyclerview.NumberViewHo
          */
         //TODO add values (Supermarket etc.); read json/string
         void bind(int listIndex) {
+            Log.d("TAG", "in bind");
             //listItemNumberView.setText(String.valueOf(listIndex));
-            String supermarket = com.example.chris.myapplication.Categories.getCategory(listIndex);
-            listItemNumberView.setText(supermarket);
+            //String supermarket = com.example.chris.myapplication.Categories.getCategoryName(listIndex);
+            //listItemNumberView.setText(supermarket);
         }
 
 

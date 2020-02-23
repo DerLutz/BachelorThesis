@@ -13,6 +13,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.os.Bundle;
 
+import android.os.StrictMode;
 import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -68,11 +69,13 @@ public class MainActivity extends Activity
     static String TAG = "MainActivity";
     //For calling next side
     static String TOTAL = "TOTAL", NAME="NAME";
+    StringBuilder stringBuilder;
+
 
     Button GetImageFromGalleryButton, UploadImageOnServerButton, GetImageFromCameraButton, SelectButton;
     ImageView ShowSelectedImage;
     Bitmap FixBitmap;
-    String ServerUploadPath ="http://192.168.89.183:1337/cornerDetection";
+    String ServerUploadPath ="http://192.168.188.67:1337/cornerDetection";
     ProgressDialog progressDialog ;
     ByteArrayOutputStream byteArrayOutputStream ;
     byte[] byteArray ;
@@ -200,7 +203,15 @@ public class MainActivity extends Activity
         /*
          * The CategoryRecView is responsible for displaying each item in the list.
          */
-        mAdapter = new CategoryRecView(NUM_LIST_ITEMS, this);
+        StringBuilder test = connectServerData();
+        int count;
+        try {
+            JSONObject json = new JSONObject(test.toString());
+            count = Integer.parseInt(json.getJSONArray("count").getJSONObject(0).getString("count"));
+        }catch (Exception e){e.printStackTrace(); count = -1;}
+
+        Log.d(TAG, "count: "+count);
+        mAdapter = new CategoryRecView(count, this, test);
         mNumbersList.setAdapter(mAdapter);
     }
 
@@ -224,7 +235,7 @@ public class MainActivity extends Activity
              */
             case R.id.action_refresh:
                 // COMPLETED (14) Pass in this as the ListItemClickListener to the CategoryRecView constructor
-                mAdapter = new CategoryRecView(NUM_LIST_ITEMS, this);
+                mAdapter = new CategoryRecView(NUM_LIST_ITEMS, this, stringBuilder);
                 mNumbersList.setAdapter(mAdapter);
                 return true;
         }
@@ -243,11 +254,11 @@ public class MainActivity extends Activity
      */
     @Override
     public void onListItemClick(int clickedItemIndex) {
-
+        StringBuilder response = connectServerData();
         //Todo get summe of receipts of category
         Intent changeActivity = new Intent(MainActivity.this, CategoryInfo.class);
-        changeActivity.putExtra(TOTAL, Integer.toString(clickedItemIndex));
-        changeActivity.putExtra(NAME, Categories.getCategory(clickedItemIndex));
+        changeActivity.putExtra(TOTAL, Categories.getCategoryTotal(response, clickedItemIndex));
+        changeActivity.putExtra(NAME, Categories.getCategoryName(response, clickedItemIndex));
 
         Log.d(TAG, "start ReceiptRecView");
         startActivity(changeActivity);
@@ -605,6 +616,100 @@ public class MainActivity extends Activity
         AlertDialog alert = alertBuilder.create();
         alert.show();
     }
+    public StringBuilder connectServerCorner(String input){
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
+        HttpURLConnection httpURLConnection ;
+        URL url;
+        OutputStream outputStream;
+        BufferedWriter bufferedWriter ;
+        int RC, orientation;
+        BufferedReader bufferedReader ;
+        String server_url = "http://192.168.188.67:1337/getData";
+        //Create Connection
+        try{
+            String ServerUploadPath = server_url;
+            url = new URL(ServerUploadPath);
+            httpURLConnection = (HttpURLConnection) url.openConnection();
+            httpURLConnection.setReadTimeout(30000);
+            httpURLConnection.setConnectTimeout(30000);
+            httpURLConnection.setRequestMethod("POST");
+            httpURLConnection.setRequestProperty("Content-Type", "text/plain");
+            //httpURLConnection.setDoInput(true);
+            httpURLConnection.setDoOutput(true);
+
+            outputStream = httpURLConnection.getOutputStream();
+            bufferedWriter = new BufferedWriter(
+                    new OutputStreamWriter(outputStream, "UTF-8"));
+            //String send = input;
+            //send = send + "\n" + Integer.toString(id);
+
+            bufferedWriter.write((input));
+
+            bufferedWriter.flush();
+            bufferedWriter.close();
+            outputStream.close();
 
 
+            //Receive answer from server
+            RC = httpURLConnection.getResponseCode();
+            if (RC == HttpsURLConnection.HTTP_OK) {
+                bufferedReader = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream()));
+                stringBuilder = new StringBuilder();
+                String RC2;
+                while ((RC2 = bufferedReader.readLine()) != null){
+                    stringBuilder.append(RC2);
+                }
+            }
+            Log.d("Server", "Answer corner detection: " + stringBuilder.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return stringBuilder;
+    }
+
+    public StringBuilder connectServerData (){
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        //Create Connection
+        try{
+            String ServerUploadPath ="http://192.168.188.67:1337/getData";
+            url = new URL(ServerUploadPath);
+            httpURLConnection = (HttpURLConnection) url.openConnection();
+            httpURLConnection.setReadTimeout(30000);
+            httpURLConnection.setConnectTimeout(30000);
+            httpURLConnection.setRequestMethod("POST");
+            httpURLConnection.setRequestProperty("Content-Type", "text/plain");
+            //httpURLConnection.setDoInput(true);
+            httpURLConnection.setDoOutput(true);
+
+            outputStream = httpURLConnection.getOutputStream();
+            bufferedWriter = new BufferedWriter(
+                    new OutputStreamWriter(outputStream, "UTF-8"));
+            String send = "Category";
+            send = send + "\n" + "1";
+            bufferedWriter.write((send));
+
+            bufferedWriter.flush();
+            bufferedWriter.close();
+            outputStream.close();
+
+
+            //Receive answer from server
+            RC = httpURLConnection.getResponseCode();
+            if (RC == HttpsURLConnection.HTTP_OK) {
+                bufferedReader = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream()));
+                stringBuilder = new StringBuilder();
+                String RC2;
+                while ((RC2 = bufferedReader.readLine()) != null){
+                    stringBuilder.append(RC2);
+                }
+            }
+            Log.d(TAG, "Answer data category: " + stringBuilder.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    return stringBuilder;
+    }
 }

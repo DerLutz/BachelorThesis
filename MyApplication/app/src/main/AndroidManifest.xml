@@ -15,12 +15,24 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Receipt"></activity>
-        <activity android:name=".CategoryInfo" />
-        <activity android:name=".OCRActivity" />
-        <activity android:name=".CornerActivity" />
-        <activity android:name=".Activity3" />
-        <activity android:name=".Activity2" />
+        <activity android:name=".Receipt"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait" />
+        <activity android:name=".CategoryInfo"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".OCRActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".CornerActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Activity3"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Activity2"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
 
         <provider
             android:name="androidx.core.content.FileProvider"

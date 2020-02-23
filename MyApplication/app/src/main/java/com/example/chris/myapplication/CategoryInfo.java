@@ -35,8 +35,8 @@ public class CategoryInfo extends AppCompatActivity
      */
     private Toast mToast;
 
-    static String TOTAL = "TOTAL", NAME= "NAME";
-    String total, name;
+    static String ID="ID", NAME= "NAME";
+    String total, name, id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,11 +158,11 @@ public class CategoryInfo extends AppCompatActivity
         //String toastMessage = "Item #" + clickedItemIndex + " clicked.";
         //mToast = Toast.makeText(this, toastMessage, Toast.LENGTH_LONG);
 
-        TOTAL = total;
+        ID = id;
         NAME = name;
 
         Intent changeActivity = new Intent(CategoryInfo.this, Receipt.class);
-        changeActivity.putExtra(TOTAL, Integer.toString(clickedItemIndex));
+        changeActivity.putExtra(ID, Integer.toString(clickedItemIndex));
         //changeActivity.putExtra(NAME, Categories.getCategory(clickedItemIndex));
         changeActivity.putExtra(NAME, name);
 

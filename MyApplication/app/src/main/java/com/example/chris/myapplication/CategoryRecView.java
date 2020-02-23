@@ -1,6 +1,7 @@
 package com.example.chris.myapplication;
 
 import android.content.Context;
+import android.os.StrictMode;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,16 +10,35 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-public class CategoryRecView extends RecyclerView.Adapter<CategoryRecView.NumberViewHolder> {
+import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+import javax.net.ssl.HttpsURLConnection;
+
+public class CategoryRecView extends RecyclerView.Adapter<CategoryRecView.NumberViewHolder> {
+    HttpURLConnection httpURLConnection ;
+    URL url;
+    OutputStream outputStream;
+    BufferedWriter bufferedWriter ;
+    int RC, orientation;
+    BufferedReader bufferedReader ;
+    //StringBuilder stringBuilder;
+    private String server_url = "http://192.168.178.44:1337/getData";
     private static final String TAG = CategoryRecView.class.getSimpleName();
 
-    // COMPLETED (3) Create a final private ListItemClickListener called mOnClickListener
     /*
      * An on-click handler that we've defined to make it easy for an Activity to interface with
      * our RecyclerView
      */
     final private ListItemClickListener mOnClickListener;
+    StringBuilder response;
 
 
     private static int viewHolderCount;
@@ -42,9 +62,10 @@ public class CategoryRecView extends RecyclerView.Adapter<CategoryRecView.Number
      * @param numberOfItems Number of items to display in list
      * @param listener Listener for list item clicks
      */
-    public CategoryRecView(int numberOfItems, ListItemClickListener listener) {
+    public CategoryRecView(int numberOfItems, ListItemClickListener listener, StringBuilder stringBuilder) {
         mNumberItems = numberOfItems;
         mOnClickListener = listener;
+        response = stringBuilder;
         viewHolderCount = 0;
     }
 
@@ -66,12 +87,15 @@ public class CategoryRecView extends RecyclerView.Adapter<CategoryRecView.Number
         int layoutIdForListItem = R.layout.number_list_item;
         LayoutInflater inflater = LayoutInflater.from(context);
         boolean shouldAttachToParentImmediately = false;
+        //StringBuilder response = connectToServer("Category", 12);
+
 
         View view = inflater.inflate(layoutIdForListItem, viewGroup, shouldAttachToParentImmediately);
         NumberViewHolder viewHolder = new NumberViewHolder(view);
 
+
         //Todo add values
-        viewHolder.viewHolderIndex.setText("Rechnung: " + viewHolderCount);
+        viewHolder.viewHolderIndex.setText("Rechnung: " + Categories.getCategoryTotal(response, viewHolderCount));
 
         //Todo Background Color
         //int backgroundColorForViewHolder = ColorUtils.getViewHolderBackgroundColorFromInstance(context, viewHolderCount);
@@ -145,7 +169,7 @@ public class CategoryRecView extends RecyclerView.Adapter<CategoryRecView.Number
          */
         //TODO add values (Receipt1 etc.)
         void bind(int listIndex) {
-            String name = Categories.getCategory(listIndex);
+            String name = Categories.getCategoryName(response, listIndex);
             listItemNumberView.setText(name);
         }
 
@@ -161,4 +185,6 @@ public class CategoryRecView extends RecyclerView.Adapter<CategoryRecView.Number
             mOnClickListener.onListItemClick(clickedPosition);
         }
     }
+
+
 }
