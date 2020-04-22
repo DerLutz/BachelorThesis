@@ -1,12 +1,15 @@
 package com.example.chris.myapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,6 +17,7 @@ import android.provider.MediaStore;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -49,16 +53,19 @@ public class CornerActivity extends AppCompatActivity {
 
     String uri, orientation;
     int height, width;
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_2);
+        setContentView(R.layout.activity_corner);
 
+        Log.d(TAG, "Corner Activity started");
 
-        Log.d(TAG, "Activity2 started");
+        mark_corner();
+    }
 
-
+    private void mark_corner(){
 
         Intent intent = getIntent();
 
@@ -115,16 +122,8 @@ public class CornerActivity extends AppCompatActivity {
         mainLayout = (RelativeLayout) findViewById(R.id.activity2);
         image = (ImageView) findViewById(R.id.image);
 
-
     }
 
-    // Creates Button for crop
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
 
     // image hast to be attached before width and height can be read
     @Override
@@ -133,7 +132,21 @@ public class CornerActivity extends AppCompatActivity {
         height=image.getHeight();
         movablePoints(width, height);
     }
+    // Creates Button for crop
+    /*@Override
+    public boolean onPrepareOptionsMenu(final Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.toolbar_main_menu,menu);
+        Log.d(TAG, "In onCreateOptionsMenu");
 
+        return true;    }*/
+    //ActionBar Button
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
 
     // method for creating the movable points
     private void movablePoints(int width, int height) {
@@ -176,7 +189,13 @@ public class CornerActivity extends AppCompatActivity {
         id=1;
         imageView1.setId(id);
 
-        RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.activity2);
+        RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.cornerActivity);
+        if (relativeLayout != null){
+            Log.d(TAG, "Relative Layout not 0");}
+        else {
+            Log.d(TAG, "Relative Layout is 0");}
+
+
         int test = relativeLayout.getWidth();
         Log.d(TAG, Integer.toString(test));
         RelativeLayout.LayoutParams layoutParams1 = new RelativeLayout.LayoutParams(60,60);
@@ -274,6 +293,7 @@ public class CornerActivity extends AppCompatActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
+        Log.d(TAG, "In onOptionsItemSelected");
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
@@ -328,8 +348,8 @@ public class CornerActivity extends AppCompatActivity {
 
 
             //TODO richtige Paramter übergeben
-            Intent start3Activity = new Intent(this, Activity3.class);
-            start3Activity.putExtra(URI_FILE, uri);
+            Intent startOCRActivity = new Intent(this, OCRActivity.class);
+            startOCRActivity.putExtra(URI_FILE, uri);
 
             // difference between MainActivity and Activity2 when moveable points are not moved
             // calculated manuel by measuring differences
@@ -346,22 +366,22 @@ public class CornerActivity extends AppCompatActivity {
             Log.d(TAG, "x3: "+x3);
             Log.d(TAG, "y3: "+y3);
 
-            start3Activity.putExtra(X0, Integer.toString((int)(x0*x_value)));
-            start3Activity.putExtra(Y0, Integer.toString((int)(y0*y_value - parameter)));
-            start3Activity.putExtra(X1, Integer.toString((int)(x1*x_value)));
-            start3Activity.putExtra(Y1, Integer.toString((int)(y1*y_value - parameter)));
-            start3Activity.putExtra(X2, Integer.toString((int)(x3*x_value)));
-            start3Activity.putExtra(Y2, Integer.toString((int)(y3*y_value - parameter)));
-            start3Activity.putExtra(X3, Integer.toString((int)(x2*x_value)));
-            start3Activity.putExtra(Y3, Integer.toString((int)(y2*y_value - parameter)));
+            startOCRActivity.putExtra(X0, Integer.toString((int)(x0*x_value)));
+            startOCRActivity.putExtra(Y0, Integer.toString((int)(y0*y_value - parameter)));
+            startOCRActivity.putExtra(X1, Integer.toString((int)(x1*x_value)));
+            startOCRActivity.putExtra(Y1, Integer.toString((int)(y1*y_value - parameter)));
+            startOCRActivity.putExtra(X2, Integer.toString((int)(x3*x_value)));
+            startOCRActivity.putExtra(Y2, Integer.toString((int)(y3*y_value - parameter)));
+            startOCRActivity.putExtra(X3, Integer.toString((int)(x2*x_value)));
+            startOCRActivity.putExtra(Y3, Integer.toString((int)(y2*y_value - parameter)));
 
-            start3Activity.putExtra(IMG_HEIGHT, Integer.toString(height));
-            start3Activity.putExtra(IMG_WIDTH, Integer.toString(width));
+            startOCRActivity.putExtra(IMG_HEIGHT, Integer.toString(height));
+            startOCRActivity.putExtra(IMG_WIDTH, Integer.toString(width));
 
-            start3Activity.putExtra(O, orientation);
+            startOCRActivity.putExtra(O, orientation);
 
-            Log.d(TAG, "Start Activity3");
-            startActivity(start3Activity);
+            Log.d(TAG, "Start OCR Activity");
+            startActivity(startOCRActivity);
         }
 
         if (id==R.id.back){

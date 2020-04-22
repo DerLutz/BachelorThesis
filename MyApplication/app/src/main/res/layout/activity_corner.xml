@@ -13,4 +13,6 @@
         android:scaleType="fitXY"
         android:id="@+id/image"/>
 
+
+
 </RelativeLayout>

@@ -4,6 +4,7 @@ package com.example.chris.myapplication;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
@@ -11,15 +12,26 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,15 +53,19 @@ import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import static android.graphics.Color.rgb;
+
 //Todo at moment present image after cut, later upload image an present the text
 //Cut the image and stretch so we get only the recipe
-public class OCRActivity extends Activity {
+public class OCRActivity extends AppCompatActivity {
 
     Uri picUri;
     String uri;
     String TAG = "OCRActivity";
     String c1x, c1y, c2x, c2y, c3x, c3y, c4x, c4y, size_height, size_width;
-    String ServerUploadPath ="http://192.168.89.183:1337/ocr";
+    String ServerUploadPath ="http://192.168.178.44:1337/ocr";
+    String FinalData;
+    String ResultData;
     ProgressDialog progressDialog ;
     ByteArrayOutputStream byteArrayOutputStream ;
     byte[] byteArray ;
@@ -61,46 +77,48 @@ public class OCRActivity extends Activity {
     int RC, orientation;
     BufferedReader bufferedReader ;
     Bitmap FixBitmap;
-
+    int count;
+    StringBuilder stringBuilder;
+    //Needs to global because it is changed in remove of rows
+    int counter;
 
     Bitmap newImage;
 
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu3, menu);
-        return true;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_3);
+        setContentView(R.layout.activity_ocr);
 
-        Log.d(TAG, "Activity3 started");
+        Log.d(TAG, "OCR Activity started");
 
+        cut_image();
+    }
+
+    private void cut_image(){
 
 
         Intent intent = getIntent();
 
-        uri = intent.getStringExtra(Activity2.URI_FILE);
+        uri = intent.getStringExtra(CornerActivity.URI_FILE);
         Log.d(TAG, uri);
 
         try {
 
 
-            c1x = intent.getStringExtra(Activity2.X0);
-            c1y = intent.getStringExtra(Activity2.Y0);
-            c2x = intent.getStringExtra(Activity2.X1);
-            c2y = intent.getStringExtra(Activity2.Y1);
-            c3x = intent.getStringExtra(Activity2.X2);
-            c3y = intent.getStringExtra(Activity2.Y2);
-            c4x = intent.getStringExtra(Activity2.X3);
-            c4y = intent.getStringExtra(Activity2.Y3);
+            c1x = intent.getStringExtra(CornerActivity.X0);
+            c1y = intent.getStringExtra(CornerActivity.Y0);
+            c2x = intent.getStringExtra(CornerActivity.X1);
+            c2y = intent.getStringExtra(CornerActivity.Y1);
+            c3x = intent.getStringExtra(CornerActivity.X2);
+            c3y = intent.getStringExtra(CornerActivity.Y2);
+            c4x = intent.getStringExtra(CornerActivity.X3);
+            c4y = intent.getStringExtra(CornerActivity.Y3);
 
-            size_height = intent.getStringExtra(Activity2.IMG_HEIGHT);
-            size_width = intent.getStringExtra(Activity2.IMG_WIDTH);
+            size_height = intent.getStringExtra(CornerActivity.IMG_HEIGHT);
+            size_width = intent.getStringExtra(CornerActivity.IMG_WIDTH);
 
-            orientation =  Integer.parseInt(intent.getStringExtra(Activity2.O));
+            orientation =  Integer.parseInt(intent.getStringExtra(CornerActivity.O));
         }
         catch (Exception e){
             e.printStackTrace();
@@ -177,10 +195,12 @@ public class OCRActivity extends Activity {
 
             Utils.matToBitmap(warpDst, bitmap);
 
-
-
+            if (bitmap == null)
+                Log.d(TAG, "Bitmap bitmap Empty");
             FixBitmap = bitmap;
 
+            if (FixBitmap == null)
+                Log.d(TAG, "Bitmap FixBitmap Empty");
             // Bitmap rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
 
             //((ImageView)findViewById(R.id.image)).setImageBitmap(bitmap);
@@ -193,7 +213,22 @@ public class OCRActivity extends Activity {
         }
 
         UploadImageToServer();
+        visualize_results();
+        Button addButton = findViewById(R.id.addButton);
+        addButton.setOnClickListener(
+                new Button.OnClickListener() {
+                    public void onClick(View v) {
+                        addRow();
+                    }
+                }
+        );
 
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu3, menu);
+        return true;
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -202,126 +237,99 @@ public class OCRActivity extends Activity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_menu) {
+        if (id == R.id.save) {
+            save();
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         }
 
+        if (id == R.id.add){
+            TableLayout tableLayout = findViewById(R.id.table);
+            TableRow row = new TableRow(this);
+            row.setPadding(10,10,10,10);
+            EditText text_a = new EditText(this);
+            text_a.setPadding(10, 10, 10, 10);
+            text_a.setTextSize(30f);
+            text_a.setId(count+1);
+            //text_date.setBackgroundColor(rgb(255, 0, 0));
+            EditText text_b = new EditText(this);
+            text_b.setTextSize(30f);
+            text_b.setPadding(10,10,10, 10);
+            text_b.setId(-count);
+            //text_total.setBackgroundColor(rgb(0,0,255));
+
+            LinearLayout ll1 = new LinearLayout(this);
+            //ll1.setBackgroundColor(rgb(0, 255,0));
+            LinearLayout.LayoutParams params_ll1 = new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
+            LinearLayout.LayoutParams params_ll1a = new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 2f);
+
+            LinearLayout ll11 = new LinearLayout(this);
+            //ll11.setBackgroundColor(rgb(255,255,0));
+            LinearLayout ll12 = new LinearLayout(this);
+            //ll12.setBackgroundColor(rgb(0,255,255));
+
+            LinearLayout.LayoutParams param_ll11 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
+
+            LinearLayout.LayoutParams param_ll12 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
+
+            ll11.addView(text_a, param_ll11);
+            ll12.addView(text_b, param_ll12);
+
+            ll1.addView(ll11, params_ll1);
+            ll1.addView(ll12, params_ll1a);
+
+            row.addView(ll1);
+            tableLayout.addView(row, count-1);
+            count++;
+
+        }
+
         if (id==R.id.back){
-            Intent intent = new Intent(this, Activity2.class);
+            Intent intent = new Intent(this, CornerActivity.class);
             startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }
 
-    public void UploadImageToServer(){
+    public void UploadImageToServer() {
+
+        Log.d(TAG, "Start upload to server");
+
+        byteArrayOutputStream = new ByteArrayOutputStream();
 
         // Prepare image for upload
         FixBitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
         byteArray = byteArrayOutputStream.toByteArray();
         ConvertImage = Base64.encodeToString(byteArray, Base64.DEFAULT);
-
-        // Class for upload
-        class AsyncTaskUploadClass extends AsyncTask<Void,Void,String> {
-
-            @Override
-            protected void onPreExecute() {
-
-                super.onPreExecute();
-                progressDialog = ProgressDialog.show(OCRActivity.this,"Image is Uploading","Please Wait",false,false);
-            }
-
-            @Override
-            protected void onPostExecute(String string1) {
-                super.onPostExecute(string1);
-                progressDialog.dismiss();
-                Toast.makeText(OCRActivity.this,string1,Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            protected String doInBackground(Void... params) {
-
-
-                OCRActivity.ImageProcessClass imageProcessClass = new OCRActivity.ImageProcessClass();
-
-                /* If some extra information should be add to upload stream. Not used at the moment
-                HashMap<String,String> HashMapParams = new HashMap<String,String>();
-                HashMapParams.put(ImageTag, GetImageNameFromEditText+".jpg");
-                HashMapParams.put(ImageName, ConvertImage);
-                Log.d("Upload", "ConvertImage: "+ConvertImage);
-                Log.d("Upload", "ImageName: "+ImageName);
-                Log.d("Upload", "ImageTag: "+ImageTag);
-                Log.d("Upload", "EditText: "+GetImageNameFromEditText); */
-
-                // Alternative for HashMap
-                //ContentValues data= new ContentValues();
-
-                //data.put("ImageName",ImageName);
-                //data.put("ImageTag", GetImageNameFromEditText);
-                //datas.put("File", file+".jpg");
-                Log.d(TAG, "set data");
-
-                //Data for upload
-                String FinalData = imageProcessClass.ImageHttpRequest(ServerUploadPath, ConvertImage);
-                return FinalData;
-            }
-        }
-        AsyncTaskUploadClass AsyncTaskUploadClassOBJ = new AsyncTaskUploadClass();
-        AsyncTaskUploadClassOBJ.execute();
-
+        uploadImage(ConvertImage);
     }
 
-    public class ImageProcessClass {
+        private void uploadImage(String data) {
 
-        public String ImageHttpRequest(String requestURL, String PData) {
-            StringBuilder stringBuilder = new StringBuilder();
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+            //Create Connection
             try {
-
-
-                //Create Connection
-                url = new URL(requestURL);
+                String ServerUploadPath = "http://192.168.188.54:5001/ocr";
+                url = new URL(ServerUploadPath);
                 httpURLConnection = (HttpURLConnection) url.openConnection();
-                httpURLConnection.setReadTimeout(30000);
-                httpURLConnection.setConnectTimeout(30000);
+                httpURLConnection.setReadTimeout(60000);
+                httpURLConnection.setConnectTimeout(60000);
                 httpURLConnection.setRequestMethod("POST");
                 httpURLConnection.setRequestProperty("Content-Type", "image/jpeg");
-                httpURLConnection.setDoInput(true);
+                //httpURLConnection.setDoInput(true);
                 httpURLConnection.setDoOutput(true);
 
                 outputStream = httpURLConnection.getOutputStream();
                 bufferedWriter = new BufferedWriter(
                         new OutputStreamWriter(outputStream, "UTF-8"));
-                bufferedWriter.write((PData));
+                String send = data;
+                bufferedWriter.write((send));
 
                 bufferedWriter.flush();
                 bufferedWriter.close();
                 outputStream.close();
 
-
-                /*if (PData != null) {              //For ContentValue
-                    OutputStream ostream = httpURLConnection.getOutputStream();
-                    BufferedWriter writer = new BufferedWriter(
-                            new OutputStreamWriter(ostream, "UTF-8"));
-                    StringBuilder requestresult = new StringBuilder();
-                    boolean first = true;
-                    for (Map.Entry<String, Object> entry : PData.valueSet()) {
-                        if (first)
-                            first = false;
-                        else
-                            requestresult.append("&");
-                        requestresult.append(URLEncoder.encode(entry.getKey(), "UTF-8"));
-                        requestresult.append("=");
-                        requestresult.append(URLEncoder.encode(entry.getValue().toString(), "UTF-8"));
-                    }
-                    writer.write(requestresult.toString());
-                    writer.flush();
-                    writer.close();
-                    ostream.close();
-                }*/
 
                 //Receive answer from server
                 RC = httpURLConnection.getResponseCode();
@@ -333,41 +341,756 @@ public class OCRActivity extends Activity {
                         stringBuilder.append(RC2);
                     }
                 }
+                Log.d(TAG, "Answer OCR result: " + stringBuilder.toString());
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            Log.d(TAG, "Answer tesseract: " + stringBuilder.toString());
 
-            //Read JSON
-            try {
-                JSONObject json = new JSONObject(stringBuilder.toString());
-
-                String text = json.getJSONArray("text").getJSONObject(0).getString("test");
-
-                TextView text1 = (TextView) findViewById(R.id.text);
-                text1.setText(text);
-                /* Example
-                c1x = json.getJSONArray("corner1").getJSONObject(0).getString("x");
-                size_height = json.getJSONArray("size").getJSONObject(0).getString("height"); */
-
-
-                Log.d(TAG, "JSON read");
-            } catch (JSONException e) {
-                e.printStackTrace();
-                Log.d(TAG, "No JSON readed");
-            }
-
-            return stringBuilder.toString();
         }
-    }
 
-
-
-    public static Bitmap rotateImage(Bitmap source, float angle) {
+        public static Bitmap rotateImage(Bitmap source, float angle) {
         Matrix matrix = new Matrix();
         matrix.postRotate(angle);
         return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(),
                 matrix, true);
     }
 
+    private void visualize_results(){
+        final TableLayout tableLayout = (TableLayout) findViewById(R.id.table);
+
+        try {
+            JSONObject json = new JSONObject(stringBuilder.toString());
+            count = Integer.parseInt(json.getJSONArray("count").getJSONObject(0).getString("count"));
+
+            // Distinguish between first 3 Lines and he others because Company, Date and Total have to bet set for server
+            //counter shows what
+            counter = 1;
+            String currentLine = json.getJSONArray(Integer.toString(counter)).getJSONObject(0).getString("a");
+            if (currentLine.equals("Company")){
+                TableRow row = new TableRow(this);
+                row.setPadding(10,10,10,10);
+                row.setBackgroundColor(rgb(255, 255, 255));
+
+                // Add Row Option
+                row.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(OCRActivity.this);
+                        builder.setCancelable(true);
+                        builder.setTitle("Select");
+                        builder.setMessage("Add missing products or remove current row");
+                        builder.setPositiveButton("Add",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        addRow();
+                                    }
+                                });
+
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
+
+                        return true;
+                    }
+                });
+
+                //a represent first column, b second column
+                String a = json.getJSONArray(Integer.toString(1)).getJSONObject(0).getString("a");
+                Log.d(TAG, a);
+                String b = json.getJSONArray(Integer.toString(1)).getJSONObject(1).getString("b");
+                Log.d(TAG, b);
+                TextView text_a = new TextView(this);
+                text_a.setText(a);
+                text_a.setPadding(10, 10, 10, 10);
+                text_a.setTextSize(20f);
+                text_a.setId(2*1-1);    //id has to be positive. Order: a1=1, b1=2, a2=3, b2=4, ..
+
+                EditText text_b = new EditText(this);
+                text_b.setText(b);
+                text_b.setTextSize(20f);
+                text_b.setPadding(10,10,10, 10);
+                text_b.setId(2*1); //id has to be positive. Order: a1=1, b1=2, a2=3, b2=4, ..
+
+                LinearLayout ll1 = new LinearLayout(this);
+                LinearLayout.LayoutParams params_ll1 = new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
+                LinearLayout.LayoutParams params_ll1a = new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 2f);
+
+                LinearLayout ll11 = new LinearLayout(this);
+                LinearLayout ll12 = new LinearLayout(this);
+
+                LinearLayout.LayoutParams param_ll11 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
+
+                LinearLayout.LayoutParams param_ll12 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
+
+                ll11.addView(text_a, param_ll11);
+                ll12.addView(text_b, param_ll12);
+
+                ll1.addView(ll11, params_ll1);
+                ll1.addView(ll12, params_ll1a);
+
+                row.addView(ll1);
+                TableRow row_space = new TableRow(this);
+                row_space.setPadding(10,10,10,10);
+                tableLayout.addView(row_space, 2*1-2);
+
+                tableLayout.addView(row, 2*1-1);
+
+
+                counter++;
+
+            }
+            else{
+                TableRow row = new TableRow(this);
+                row.setPadding(10,10,10,10);
+                row.setBackgroundColor(rgb(255, 255, 255));
+
+                // Add Row Option
+                row.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(OCRActivity.this);
+                        builder.setCancelable(true);
+                        builder.setTitle("Select");
+                        builder.setMessage("Add missing products or remove current row");
+                        builder.setPositiveButton("Add",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        addRow();
+                                    }
+                                });
+
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
+
+                        return true;
+                    }
+                });
+
+                TextView text_a = new TextView(this);
+                text_a.setText("Company");
+                text_a.setPadding(10, 10, 10, 10);
+                text_a.setTextSize(20f);
+                text_a.setId(2*1-1);    //id has to be positive. Order: a1=1, b1=2, a2=3, b2=4, ..
+                EditText text_b = new EditText(this);
+                text_b.setText("");
+                text_b.setTextSize(20f);
+                text_b.setPadding(10,10,10, 10);
+                text_b.setId(2*1); //id has to be positive. Order: a1=1, b1=2, a2=3, b2=4, ..
+
+                LinearLayout ll1 = new LinearLayout(this);
+                LinearLayout.LayoutParams params_ll1 = new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
+                LinearLayout.LayoutParams params_ll1a = new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 2f);
+
+                LinearLayout ll11 = new LinearLayout(this);
+                LinearLayout ll12 = new LinearLayout(this);
+
+                LinearLayout.LayoutParams param_ll11 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
+
+                LinearLayout.LayoutParams param_ll12 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
+
+                ll11.addView(text_a, param_ll11);
+                ll12.addView(text_b, param_ll12);
+
+                ll1.addView(ll11, params_ll1);
+                ll1.addView(ll12, params_ll1a);
+
+                row.addView(ll1);
+                TableRow row_space = new TableRow(this);
+                row_space.setPadding(10,10,10,10);
+                tableLayout.addView(row_space, 2*1-2);
+
+                tableLayout.addView(row, 2*1-1);
+
+            }
+
+            //Check Date
+            currentLine = json.getJSONArray(Integer.toString(counter)).getJSONObject(0).getString("a");
+            if (currentLine.equals("Date")){
+                TableRow row = new TableRow(this);
+                row.setPadding(10,10,10,10);
+                row.setBackgroundColor(rgb(255, 255, 255));
+
+                // Add Row Option
+                row.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(OCRActivity.this);
+                        builder.setCancelable(true);
+                        builder.setTitle("Select");
+                        builder.setMessage("Add missing products or remove current row");
+                        builder.setPositiveButton("Add",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        addRow();
+                                    }
+                                });
+
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
+
+                        return true;
+                    }
+                });
+
+
+                //a represent first column, b second column
+                String a = json.getJSONArray(Integer.toString(counter)).getJSONObject(0).getString("a");
+                Log.d(TAG, a);
+                String b = json.getJSONArray(Integer.toString(counter)).getJSONObject(1).getString("b");
+                Log.d(TAG, b);
+                TextView text_a = new TextView(this);
+                text_a.setText(a);
+                text_a.setPadding(10, 10, 10, 10);
+                text_a.setTextSize(20f);
+                text_a.setId(2*2-1);    //id has to be positive. Order: a1=1, b1=2, a2=3, b2=4, ..
+
+                EditText text_b = new EditText(this);
+                text_b.setText(b);
+                text_b.setTextSize(20f);
+                text_b.setPadding(10,10,10, 10);
+                text_b.setId(2*2); //id has to be positive. Order: a1=1, b1=2, a2=3, b2=4, ..
+
+                LinearLayout ll1 = new LinearLayout(this);
+                LinearLayout.LayoutParams params_ll1 = new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
+                LinearLayout.LayoutParams params_ll1a = new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 2f);
+
+                LinearLayout ll11 = new LinearLayout(this);
+                LinearLayout ll12 = new LinearLayout(this);
+
+                LinearLayout.LayoutParams param_ll11 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
+
+                LinearLayout.LayoutParams param_ll12 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
+
+                ll11.addView(text_a, param_ll11);
+                ll12.addView(text_b, param_ll12);
+
+                ll1.addView(ll11, params_ll1);
+                ll1.addView(ll12, params_ll1a);
+
+                row.addView(ll1);
+                TableRow row_space = new TableRow(this);
+                row_space.setPadding(10,10,10,10);
+                tableLayout.addView(row_space, 2*2-2);
+
+                tableLayout.addView(row, 2*2-1);
+
+
+                counter++;
+
+            }
+            else{
+                TableRow row = new TableRow(this);
+                row.setPadding(10,10,10,10);
+                row.setBackgroundColor(rgb(255, 255, 255));
+
+                // Add Row Option
+                row.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(OCRActivity.this);
+                        builder.setCancelable(true);
+                        builder.setTitle("Select");
+                        builder.setMessage("Add missing products or remove current row");
+                        builder.setPositiveButton("Add",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        addRow();
+                                    }
+                                });
+
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
+
+                        return true;
+                    }
+                });
+
+
+                TextView text_a = new TextView(this);
+                text_a.setText("Date");
+                text_a.setPadding(10, 10, 10, 10);
+                text_a.setTextSize(20f);
+                text_a.setId(2*2-1);    //id has to be positive. Order: a1=1, b1=2, a2=3, b2=4, ..
+                EditText text_b = new EditText(this);
+                text_b.setText("");
+                text_b.setTextSize(20f);
+                text_b.setPadding(10,10,10, 10);
+                text_b.setId(2*2); //id has to be positive. Order: a1=1, b1=2, a2=3, b2=4, ..
+
+                LinearLayout ll1 = new LinearLayout(this);
+                LinearLayout.LayoutParams params_ll1 = new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
+                LinearLayout.LayoutParams params_ll1a = new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 2f);
+
+                LinearLayout ll11 = new LinearLayout(this);
+                LinearLayout ll12 = new LinearLayout(this);
+
+                LinearLayout.LayoutParams param_ll11 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
+
+                LinearLayout.LayoutParams param_ll12 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
+
+                ll11.addView(text_a, param_ll11);
+                ll12.addView(text_b, param_ll12);
+
+                ll1.addView(ll11, params_ll1);
+                ll1.addView(ll12, params_ll1a);
+
+                row.addView(ll1);
+                TableRow row_space = new TableRow(this);
+                row_space.setPadding(10,10,10,10);
+                tableLayout.addView(row_space, 2*2-2);
+
+                tableLayout.addView(row, 2*2-1);
+            }
+
+            // For Total
+            currentLine = json.getJSONArray(Integer.toString(counter)).getJSONObject(0).getString("a");
+            if (currentLine.equals("Total")){
+                TableRow row = new TableRow(this);
+                row.setPadding(10,10,10,10);
+                row.setBackgroundColor(rgb(255, 255, 255));
+
+                // Add Row Option
+                row.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(OCRActivity.this);
+                        builder.setCancelable(true);
+                        builder.setTitle("Select");
+                        builder.setMessage("Add missing products or remove current row");
+                        builder.setPositiveButton("Add",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        addRow();
+                                    }
+                                });
+
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
+
+                        return true;
+                    }
+                });
+
+
+                //a represent first column, b second column
+                String a = json.getJSONArray(Integer.toString(counter)).getJSONObject(0).getString("a");
+                Log.d(TAG, a);
+                String b = json.getJSONArray(Integer.toString(counter)).getJSONObject(1).getString("b");
+                Log.d(TAG, b);
+                TextView text_a = new TextView(this);
+                text_a.setText(a);
+                text_a.setPadding(10, 10, 10, 10);
+                text_a.setTextSize(20f);
+                text_a.setId(2*3-1);    //id has to be positive. Order: a1=1, b1=2, a2=3, b2=4, ..
+
+                EditText text_b = new EditText(this);
+                text_b.setText(b);
+                text_b.setTextSize(20f);
+                text_b.setPadding(10,10,10, 10);
+                text_b.setId(2*3); //id has to be positive. Order: a1=1, b1=2, a2=3, b2=4, ..
+
+                LinearLayout ll1 = new LinearLayout(this);
+                LinearLayout.LayoutParams params_ll1 = new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
+                LinearLayout.LayoutParams params_ll1a = new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 2f);
+
+                LinearLayout ll11 = new LinearLayout(this);
+                LinearLayout ll12 = new LinearLayout(this);
+
+                LinearLayout.LayoutParams param_ll11 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
+
+                LinearLayout.LayoutParams param_ll12 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
+
+                ll11.addView(text_a, param_ll11);
+                ll12.addView(text_b, param_ll12);
+
+                ll1.addView(ll11, params_ll1);
+                ll1.addView(ll12, params_ll1a);
+
+                row.addView(ll1);
+                TableRow row_space = new TableRow(this);
+                row_space.setPadding(10,10,10,10);
+                tableLayout.addView(row_space, 2*3-2);
+
+                tableLayout.addView(row, 2*3-1);
+
+                counter++;
+
+            }
+            else{
+                TableRow row = new TableRow(this);
+                row.setPadding(10,10,10,10);
+                row.setBackgroundColor(rgb(255, 255, 255));
+
+                row.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(OCRActivity.this);
+                        builder.setCancelable(true);
+                        builder.setTitle("Select");
+                        builder.setMessage("Add missing products");
+                        builder.setPositiveButton("Add",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        addRow();
+                                    }
+                                });
+
+
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
+
+                        return true;
+                    }
+                });
+
+
+                TextView text_a = new TextView(this);
+                text_a.setText("Total");
+                text_a.setPadding(10, 10, 10, 10);
+                text_a.setTextSize(20f);
+                text_a.setId(2*3-1);    //id has to be positive. Order: a1=1, b1=2, a2=3, b2=4, ..
+                EditText text_b = new EditText(this);
+                text_b.setText("");
+                text_b.setTextSize(20f);
+                text_b.setPadding(10,10,10, 10);
+                text_b.setId(2*3); //id has to be positive. Order: a1=1, b1=2, a2=3, b2=4, ..
+
+                LinearLayout ll1 = new LinearLayout(this);
+                LinearLayout.LayoutParams params_ll1 = new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
+                LinearLayout.LayoutParams params_ll1a = new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 2f);
+
+                LinearLayout ll11 = new LinearLayout(this);
+                LinearLayout ll12 = new LinearLayout(this);
+
+                LinearLayout.LayoutParams param_ll11 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
+
+                LinearLayout.LayoutParams param_ll12 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
+
+                ll11.addView(text_a, param_ll11);
+                ll12.addView(text_b, param_ll12);
+
+                ll1.addView(ll11, params_ll1);
+                ll1.addView(ll12, params_ll1a);
+
+                row.addView(ll1);
+                TableRow row_space = new TableRow(this);
+                row_space.setPadding(10,10,10,10);
+                tableLayout.addView(row_space, 2*3-2);
+
+                tableLayout.addView(row, 2*3-1);
+            }
+
+            // k is ID of rows; get all k from 1 to count would be k<count+1;  starting with k=4 -> k<count+1+3
+            // if company xor date xor total is inside -> counter = 2 and counter=1 already read -> k<count+1+3-1
+            // if two of (company, date, total) are inside -> counter = 3 and counter=1 and counter=2 are already read -> k<count+1+3-2
+            // if three of (company, date, total) are inside -> counter = 4 and counter=1, 2, 3 are already read -> k<count+1+3-3
+
+            int alreadyRead = counter;
+            count = count + 3 -(alreadyRead -1);
+            for (int k = 4; k < (count + 1 + 3-(alreadyRead - 1)); k++) {
+                Log.d(TAG, Integer.toString(k));
+                Log.d(TAG, "Count: "+ Integer.toString(count));
+                final TableRow row = new TableRow(this);
+                row.setPadding(10,10,10,10);
+                row.setBackgroundColor(rgb(255, 255, 255));
+
+                //Add and Remove Options
+                row.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(OCRActivity.this);
+                        builder.setCancelable(true);
+                        builder.setTitle("Select");
+                        builder.setMessage("Add missing products or remove current row");
+                        builder.setPositiveButton("Add",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        addRow();
+                                    }
+                                });
+                        // Remove only for product rows
+                        builder.setNegativeButton("Remove", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                tableLayout.removeView(row);
+                                //Reduce also counter. Only final Variable can be called. S
+                                counter--;
+
+                            }
+                        });
+
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
+
+                        return true;
+                    }
+                });
+                //TableRow.LayoutParams rowParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT);
+                //row.setLayoutParams(tableParams);
+                //row.setPadding(10, 10, 10, 10);
+                //row.setBackgroundColor(rgb(0, 255, 255));
+
+                //int receipt_id = Integer.parseInt(json.getJSONArray(Integer.toString(k)).getJSONObject(0).getString("ID"));
+                //row.setId(k);
+                //a represent first column, v second column
+                String a = json.getJSONArray(Integer.toString(counter)).getJSONObject(0).getString("a");
+                Log.d(TAG, a);
+                String b = json.getJSONArray(Integer.toString(counter)).getJSONObject(1).getString("b");
+                Log.d(TAG, b);
+                EditText text_a = new EditText(this);
+                text_a.setText(a);
+                text_a.setPadding(10, 10, 10, 10);
+                text_a.setTextSize(20f);
+                text_a.setId(2*k-1);    //id has to be positive. Order: a1=1, b1=2, a2=3, b2=4, ..
+                //text_date.setBackgroundColor(rgb(255, 0, 0));
+                EditText text_b = new EditText(this);
+                text_b.setText(b);
+                text_b.setTextSize(20f);
+                text_b.setPadding(10,10,10, 10);
+                text_b.setId(2*k); //id has to be positive. Order: a1=1, b1=2, a2=3, b2=4, ..
+                //text_total.setBackgroundColor(rgb(0,0,255));
+
+                //RelativeLayout rl = new RelativeLayout(this);
+
+                //RelativeLayout.LayoutParams params_price = new RelativeLayout.LayoutParams(RelativeLayout.ALIGN_PARENT_RIGHT, TRUE);
+
+                //params_price.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, TRUE);
+                //params_price.addRule(RelativeLayout.RIGHT_OF, 1);
+
+                LinearLayout ll1 = new LinearLayout(this);
+                //ll1.setBackgroundColor(rgb(0, 255,0));
+                /*LinearLayout.LayoutParams param_ll = new LinearLayout.LayoutParams(
+                        RelativeLayout.LayoutParams.WRAP_CONTENT,
+                        RelativeLayout.LayoutParams.WRAP_CONTENT,
+                        3.0f
+                );*/
+                //rl.setLayoutParams(rowParams);
+                //product.setLayoutParams(new TableLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 2f));
+                LinearLayout.LayoutParams params_ll1 = new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
+                LinearLayout.LayoutParams params_ll1a = new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 2f);
+                //text_date.setLayoutParams(new TableLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT, 2f));
+
+                LinearLayout ll11 = new LinearLayout(this);
+                //ll11.setBackgroundColor(rgb(255,255,0));
+                LinearLayout ll12 = new LinearLayout(this);
+                //ll12.setBackgroundColor(rgb(0,255,255));
+
+                LinearLayout.LayoutParams param_ll11 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
+
+                LinearLayout.LayoutParams param_ll12 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
+
+                ll11.addView(text_a, param_ll11);
+                ll12.addView(text_b, param_ll12);
+
+                ll1.addView(ll11, params_ll1);
+                ll1.addView(ll12, params_ll1a);
+
+                //rl.addView(text_date,params);
+                //text_total.setGravity(5);   // 5 means right
+
+                //LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
+                //text_total.setBackgroundColor(rgb(0, 0, 255));
+                // Add all the rules you need
+                //param.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+                //rl.addView(text_total, param);
+
+                row.addView(ll1);
+
+                TableRow row_space = new TableRow(this);
+                row_space.setPadding(10,10,10,10);
+                tableLayout.addView(row_space, 2*k-2);
+
+                tableLayout.addView(row, 2*k-1);
+                counter++;
+                Log.d(TAG, "k: "+ Integer.toString(k));
+
+            }
+            //c1x = json.getJSONArray("corner1").getJSONObject(0).getString("x");
+            //c1y = json.getJSONArray("corner1").getJSONObject(0).getString("y");
+
+            //size_height = json.getJSONArray("size").getJSONObject(0).getString("height");
+            //size_width = json.getJSONArray("size").getJSONObject(0).getString("width");
+
+
+            Log.d(TAG, "JSON with results read");
+            Log.d(TAG, "k: "+ Integer.toString(count));
+        } catch (
+                JSONException e) {
+            Toast.makeText(getApplicationContext(),"Problem during connecting with internet",Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+        }
+    }
+
+    private void save() {
+        Log.d(TAG, "Save results on server");
+
+        String data = collect_results();
+        Log.d(TAG, "uploaded Data: " + data);
+        uploadData(data);
+    }
+
+    private void uploadData(String data) {
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        //Create Connection
+        try {
+            String ServerUploadPath = "http://192.168.188.67:1337/save";
+            url = new URL(ServerUploadPath);
+            httpURLConnection = (HttpURLConnection) url.openConnection();
+            httpURLConnection.setReadTimeout(60000);
+            httpURLConnection.setConnectTimeout(60000);
+            httpURLConnection.setRequestMethod("POST");
+            httpURLConnection.setRequestProperty("Content-Type", "text/plain");
+            //httpURLConnection.setDoInput(true);
+            httpURLConnection.setDoOutput(true);
+
+            outputStream = httpURLConnection.getOutputStream();
+            bufferedWriter = new BufferedWriter(
+                    new OutputStreamWriter(outputStream, "UTF-8"));
+
+            bufferedWriter.write(data);
+
+            bufferedWriter.flush();
+            bufferedWriter.close();
+            outputStream.close();
+
+
+            //Receive answer from server
+            RC = httpURLConnection.getResponseCode();
+            if (RC == HttpsURLConnection.HTTP_OK) {
+                bufferedReader = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream()));
+                stringBuilder = new StringBuilder();
+                String RC2;
+                while ((RC2 = bufferedReader.readLine()) != null) {
+                    stringBuilder.append(RC2);
+                }
+            }
+            Log.d(TAG, "Answer save: " + stringBuilder.toString());
+
+            } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+
+    private String collect_results() {
+        JSONObject obj = new JSONObject();
+
+        try {
+            //read edittext views and write the values is json file
+            for (int i = 1; i < count + 1; i++) {
+                String id = Integer.toString(i + 1);
+                EditText etext_a = findViewById(i * 2 - 1);
+                EditText etext_b = findViewById(i * 2);
+                String text_a = etext_a.getText().toString();
+                String text_b = etext_b.getText().toString();
+
+                obj.put(text_a, text_b);
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            Toast.makeText(OCRActivity.this, "A problem while uploading appeared", Toast.LENGTH_SHORT).show();
+        }
+
+        return obj.toString();
+    }
+
+    private void addRow(){
+        // adding a new line
+        count++;
+        TableLayout tableLayout = (TableLayout) findViewById(R.id.table);
+
+        TableRow row = new TableRow(this);
+        row.setPadding(10,10,10,10);
+        row.setBackgroundColor(rgb(255, 255, 255));
+        //TableRow.LayoutParams rowParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT);
+        //row.setLayoutParams(tableParams);
+        //row.setPadding(10, 10, 10, 10);
+        //row.setBackgroundColor(rgb(0, 255, 255));
+
+        //int receipt_id = Integer.parseInt(json.getJSONArray(Integer.toString(k)).getJSONObject(0).getString("ID"));
+        //row.setId(k);
+        //a represent first column, v second column
+        EditText text_a = new EditText(this);
+        text_a.setText("Product");
+        text_a.setPadding(10, 10, 10, 10);
+        text_a.setTextSize(20f);
+        text_a.setId(2*count-1);    //id has to be positive. Order: a1=1, b1=2, a2=3, b2=4, ..
+        //text_date.setBackgroundColor(rgb(255, 0, 0));
+        EditText text_b = new EditText(this);
+        text_b.setText("Price");
+        text_b.setTextSize(20f);
+        text_b.setPadding(10,10,10, 10);
+        text_b.setId(2*count); //id has to be positive. Order: a1=1, b1=2, a2=3, b2=4, ..
+        //text_total.setBackgroundColor(rgb(0,0,255));
+
+        //RelativeLayout rl = new RelativeLayout(this);
+
+        //RelativeLayout.LayoutParams params_price = new RelativeLayout.LayoutParams(RelativeLayout.ALIGN_PARENT_RIGHT, TRUE);
+
+        //params_price.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, TRUE);
+        //params_price.addRule(RelativeLayout.RIGHT_OF, 1);
+
+        LinearLayout ll1 = new LinearLayout(this);
+        //ll1.setBackgroundColor(rgb(0, 255,0));
+                /*LinearLayout.LayoutParams param_ll = new LinearLayout.LayoutParams(
+                        RelativeLayout.LayoutParams.WRAP_CONTENT,
+                        RelativeLayout.LayoutParams.WRAP_CONTENT,
+                        3.0f
+                );*/
+        //rl.setLayoutParams(rowParams);
+        //product.setLayoutParams(new TableLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 2f));
+        LinearLayout.LayoutParams params_ll1 = new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
+        LinearLayout.LayoutParams params_ll1a = new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 2f);
+        //text_date.setLayoutParams(new TableLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT, 2f));
+
+        LinearLayout ll11 = new LinearLayout(this);
+        //ll11.setBackgroundColor(rgb(255,255,0));
+        LinearLayout ll12 = new LinearLayout(this);
+        //ll12.setBackgroundColor(rgb(0,255,255));
+
+        LinearLayout.LayoutParams param_ll11 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
+
+        LinearLayout.LayoutParams param_ll12 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
+
+        ll11.addView(text_a, param_ll11);
+        ll12.addView(text_b, param_ll12);
+
+        ll1.addView(ll11, params_ll1);
+        ll1.addView(ll12, params_ll1a);
+
+        //rl.addView(text_date,params);
+        //text_total.setGravity(5);   // 5 means right
+
+        //LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
+        //text_total.setBackgroundColor(rgb(0, 0, 255));
+        // Add all the rules you need
+        //param.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        //rl.addView(text_total, param);
+
+        row.addView(ll1);
+
+        TableRow row_space = new TableRow(this);
+        row_space.setPadding(10,10,10,10);
+        tableLayout.addView(row_space, 2*count-2);
+
+        tableLayout.addView(row, 2*count-1);
+    }
 }

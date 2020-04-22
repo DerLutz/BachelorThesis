@@ -49,7 +49,7 @@ public class Activity3 extends Activity {
     String uri;
     String TAG = "Activity3";
     String c1x, c1y, c2x, c2y, c3x, c3y, c4x, c4y, size_height, size_width;
-    String ServerUploadPath ="http://192.168.89.183:1337/ocr";
+    String ServerUploadPath ="http://192.168.178.44:1337/ocr";
     ProgressDialog progressDialog ;
     ByteArrayOutputStream byteArrayOutputStream ;
     byte[] byteArray ;
@@ -206,10 +206,10 @@ public class Activity3 extends Activity {
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_menu) {
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-        }
+        //if (id == R.id.action_menu) {
+        //    Intent intent = new Intent(this, MainActivity.class);
+        //    startActivity(intent);
+        //}
 
         if (id==R.id.back){
             Intent intent = new Intent(this, Activity2.class);
@@ -218,8 +218,16 @@ public class Activity3 extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+
     public void UploadImageToServer(){
 
+        Bitmap emptyBitmap = Bitmap.createBitmap(FixBitmap.getWidth(), FixBitmap.getHeight(), FixBitmap.getConfig());
+        if (FixBitmap.sameAs(emptyBitmap)) {
+            Log.d(TAG, "FixBitmap ist empty");
+            // myBitmap is empty/blank
+        }
+        else {Log.d(TAG, "Fixbitmap not empty");}
+        byteArrayOutputStream = new ByteArrayOutputStream();
         // Prepare image for upload
         FixBitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
         byteArray = byteArrayOutputStream.toByteArray();
