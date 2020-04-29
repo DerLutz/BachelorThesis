@@ -5,5 +5,5 @@
     android:layout_height="wrap_content"
     android:background="@color/colorPrimary"
     android:text="iReceipt"
-    android:textColor="@color/white"
+    android:textColor="@color/font"
     android:elevation="4dp" />

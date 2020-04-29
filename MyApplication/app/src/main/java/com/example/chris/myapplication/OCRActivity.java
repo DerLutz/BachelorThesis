@@ -368,8 +368,8 @@ public class OCRActivity extends AppCompatActivity {
             String currentLine = json.getJSONArray(Integer.toString(counter)).getJSONObject(0).getString("a");
             if (currentLine.equals("Company")){
                 TableRow row = new TableRow(this);
-                row.setPadding(10,10,10,10);
-                row.setBackgroundColor(rgb(255, 255, 255));
+                //row.setPadding(10,10,10,10);
+                row.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
 
                 // Add Row Option
                 row.setOnLongClickListener(new View.OnLongClickListener() {
@@ -405,12 +405,14 @@ public class OCRActivity extends AppCompatActivity {
                 text_a.setPadding(10, 10, 10, 10);
                 text_a.setTextSize(20f);
                 text_a.setId(2*1-1);    //id has to be positive. Order: a1=1, b1=2, a2=3, b2=4, ..
+                text_a.setTextColor(getResources().getColor(R.color.font));
 
                 EditText text_b = new EditText(this);
                 text_b.setText(b);
                 text_b.setTextSize(20f);
                 text_b.setPadding(10,10,10, 10);
                 text_b.setId(2*1); //id has to be positive. Order: a1=1, b1=2, a2=3, b2=4, ..
+                text_b.setTextColor(getResources().getColor(R.color.font));
 
                 LinearLayout ll1 = new LinearLayout(this);
                 LinearLayout.LayoutParams params_ll1 = new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
@@ -432,6 +434,7 @@ public class OCRActivity extends AppCompatActivity {
                 row.addView(ll1);
                 TableRow row_space = new TableRow(this);
                 row_space.setPadding(10,10,10,10);
+                row_space.setBackgroundColor(getResources().getColor(R.color.colorSecond));
                 tableLayout.addView(row_space, 2*1-2);
 
                 tableLayout.addView(row, 2*1-1);
@@ -442,8 +445,7 @@ public class OCRActivity extends AppCompatActivity {
             }
             else{
                 TableRow row = new TableRow(this);
-                row.setPadding(10,10,10,10);
-                row.setBackgroundColor(rgb(255, 255, 255));
+                row.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
 
                 // Add Row Option
                 row.setOnLongClickListener(new View.OnLongClickListener() {
@@ -474,11 +476,14 @@ public class OCRActivity extends AppCompatActivity {
                 text_a.setPadding(10, 10, 10, 10);
                 text_a.setTextSize(20f);
                 text_a.setId(2*1-1);    //id has to be positive. Order: a1=1, b1=2, a2=3, b2=4, ..
+                text_a.setTextColor(getResources().getColor(R.color.font));
+
                 EditText text_b = new EditText(this);
                 text_b.setText("");
                 text_b.setTextSize(20f);
                 text_b.setPadding(10,10,10, 10);
                 text_b.setId(2*1); //id has to be positive. Order: a1=1, b1=2, a2=3, b2=4, ..
+                text_b.setTextColor(getResources().getColor(R.color.font));
 
                 LinearLayout ll1 = new LinearLayout(this);
                 LinearLayout.LayoutParams params_ll1 = new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
@@ -500,6 +505,7 @@ public class OCRActivity extends AppCompatActivity {
                 row.addView(ll1);
                 TableRow row_space = new TableRow(this);
                 row_space.setPadding(10,10,10,10);
+                row_space.setBackgroundColor(getResources().getColor(R.color.colorSecond));
                 tableLayout.addView(row_space, 2*1-2);
 
                 tableLayout.addView(row, 2*1-1);
@@ -510,8 +516,7 @@ public class OCRActivity extends AppCompatActivity {
             currentLine = json.getJSONArray(Integer.toString(counter)).getJSONObject(0).getString("a");
             if (currentLine.equals("Date")){
                 TableRow row = new TableRow(this);
-                row.setPadding(10,10,10,10);
-                row.setBackgroundColor(rgb(255, 255, 255));
+                row.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
 
                 // Add Row Option
                 row.setOnLongClickListener(new View.OnLongClickListener() {
@@ -548,12 +553,14 @@ public class OCRActivity extends AppCompatActivity {
                 text_a.setPadding(10, 10, 10, 10);
                 text_a.setTextSize(20f);
                 text_a.setId(2*2-1);    //id has to be positive. Order: a1=1, b1=2, a2=3, b2=4, ..
+                text_a.setTextColor(getResources().getColor(R.color.font));
 
                 EditText text_b = new EditText(this);
                 text_b.setText(b);
                 text_b.setTextSize(20f);
                 text_b.setPadding(10,10,10, 10);
                 text_b.setId(2*2); //id has to be positive. Order: a1=1, b1=2, a2=3, b2=4, ..
+                text_b.setTextColor(getResources().getColor(R.color.font));
 
                 LinearLayout ll1 = new LinearLayout(this);
                 LinearLayout.LayoutParams params_ll1 = new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
@@ -575,6 +582,7 @@ public class OCRActivity extends AppCompatActivity {
                 row.addView(ll1);
                 TableRow row_space = new TableRow(this);
                 row_space.setPadding(10,10,10,10);
+                row_space.setBackgroundColor(getResources().getColor(R.color.colorSecond));
                 tableLayout.addView(row_space, 2*2-2);
 
                 tableLayout.addView(row, 2*2-1);
@@ -585,8 +593,7 @@ public class OCRActivity extends AppCompatActivity {
             }
             else{
                 TableRow row = new TableRow(this);
-                row.setPadding(10,10,10,10);
-                row.setBackgroundColor(rgb(255, 255, 255));
+                row.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
 
                 // Add Row Option
                 row.setOnLongClickListener(new View.OnLongClickListener() {
@@ -618,11 +625,13 @@ public class OCRActivity extends AppCompatActivity {
                 text_a.setPadding(10, 10, 10, 10);
                 text_a.setTextSize(20f);
                 text_a.setId(2*2-1);    //id has to be positive. Order: a1=1, b1=2, a2=3, b2=4, ..
+                text_a.setTextColor(getResources().getColor(R.color.font));
                 EditText text_b = new EditText(this);
                 text_b.setText("");
                 text_b.setTextSize(20f);
                 text_b.setPadding(10,10,10, 10);
                 text_b.setId(2*2); //id has to be positive. Order: a1=1, b1=2, a2=3, b2=4, ..
+                text_b.setTextColor(getResources().getColor(R.color.font));
 
                 LinearLayout ll1 = new LinearLayout(this);
                 LinearLayout.LayoutParams params_ll1 = new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
@@ -644,6 +653,7 @@ public class OCRActivity extends AppCompatActivity {
                 row.addView(ll1);
                 TableRow row_space = new TableRow(this);
                 row_space.setPadding(10,10,10,10);
+                row_space.setBackgroundColor(getResources().getColor(R.color.colorSecond));
                 tableLayout.addView(row_space, 2*2-2);
 
                 tableLayout.addView(row, 2*2-1);
@@ -653,8 +663,7 @@ public class OCRActivity extends AppCompatActivity {
             currentLine = json.getJSONArray(Integer.toString(counter)).getJSONObject(0).getString("a");
             if (currentLine.equals("Total")){
                 TableRow row = new TableRow(this);
-                row.setPadding(10,10,10,10);
-                row.setBackgroundColor(rgb(255, 255, 255));
+                row.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
 
                 // Add Row Option
                 row.setOnLongClickListener(new View.OnLongClickListener() {
@@ -691,12 +700,14 @@ public class OCRActivity extends AppCompatActivity {
                 text_a.setPadding(10, 10, 10, 10);
                 text_a.setTextSize(20f);
                 text_a.setId(2*3-1);    //id has to be positive. Order: a1=1, b1=2, a2=3, b2=4, ..
+                text_a.setTextColor(getResources().getColor(R.color.font));
 
                 EditText text_b = new EditText(this);
                 text_b.setText(b);
                 text_b.setTextSize(20f);
                 text_b.setPadding(10,10,10, 10);
                 text_b.setId(2*3); //id has to be positive. Order: a1=1, b1=2, a2=3, b2=4, ..
+                text_b.setTextColor(getResources().getColor(R.color.font));
 
                 LinearLayout ll1 = new LinearLayout(this);
                 LinearLayout.LayoutParams params_ll1 = new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
@@ -718,6 +729,7 @@ public class OCRActivity extends AppCompatActivity {
                 row.addView(ll1);
                 TableRow row_space = new TableRow(this);
                 row_space.setPadding(10,10,10,10);
+                row_space.setBackgroundColor(getResources().getColor(R.color.colorSecond));
                 tableLayout.addView(row_space, 2*3-2);
 
                 tableLayout.addView(row, 2*3-1);
@@ -727,8 +739,7 @@ public class OCRActivity extends AppCompatActivity {
             }
             else{
                 TableRow row = new TableRow(this);
-                row.setPadding(10,10,10,10);
-                row.setBackgroundColor(rgb(255, 255, 255));
+                row.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
 
                 row.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
@@ -760,11 +771,13 @@ public class OCRActivity extends AppCompatActivity {
                 text_a.setPadding(10, 10, 10, 10);
                 text_a.setTextSize(20f);
                 text_a.setId(2*3-1);    //id has to be positive. Order: a1=1, b1=2, a2=3, b2=4, ..
+                text_a.setTextColor(getResources().getColor(R.color.font));
                 EditText text_b = new EditText(this);
                 text_b.setText("");
                 text_b.setTextSize(20f);
                 text_b.setPadding(10,10,10, 10);
                 text_b.setId(2*3); //id has to be positive. Order: a1=1, b1=2, a2=3, b2=4, ..
+                text_b.setTextColor(getResources().getColor(R.color.font));
 
                 LinearLayout ll1 = new LinearLayout(this);
                 LinearLayout.LayoutParams params_ll1 = new TableLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
@@ -786,6 +799,7 @@ public class OCRActivity extends AppCompatActivity {
                 row.addView(ll1);
                 TableRow row_space = new TableRow(this);
                 row_space.setPadding(10,10,10,10);
+                row_space.setBackgroundColor(getResources().getColor(R.color.colorSecond));
                 tableLayout.addView(row_space, 2*3-2);
 
                 tableLayout.addView(row, 2*3-1);
@@ -802,8 +816,7 @@ public class OCRActivity extends AppCompatActivity {
                 Log.d(TAG, Integer.toString(k));
                 Log.d(TAG, "Count: "+ Integer.toString(count));
                 final TableRow row = new TableRow(this);
-                row.setPadding(10,10,10,10);
-                row.setBackgroundColor(rgb(255, 255, 255));
+                row.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
 
                 //Add and Remove Options
                 row.setOnLongClickListener(new View.OnLongClickListener() {
@@ -855,13 +868,15 @@ public class OCRActivity extends AppCompatActivity {
                 text_a.setPadding(10, 10, 10, 10);
                 text_a.setTextSize(20f);
                 text_a.setId(2*k-1);    //id has to be positive. Order: a1=1, b1=2, a2=3, b2=4, ..
+                text_a.setTextColor(getResources().getColor(R.color.font));
+
                 //text_date.setBackgroundColor(rgb(255, 0, 0));
                 EditText text_b = new EditText(this);
                 text_b.setText(b);
                 text_b.setTextSize(20f);
                 text_b.setPadding(10,10,10, 10);
                 text_b.setId(2*k); //id has to be positive. Order: a1=1, b1=2, a2=3, b2=4, ..
-                //text_total.setBackgroundColor(rgb(0,0,255));
+                text_b.setTextColor(getResources().getColor(R.color.font));
 
                 //RelativeLayout rl = new RelativeLayout(this);
 
@@ -911,6 +926,7 @@ public class OCRActivity extends AppCompatActivity {
 
                 TableRow row_space = new TableRow(this);
                 row_space.setPadding(10,10,10,10);
+                row_space.setBackgroundColor(getResources().getColor(R.color.colorSecond));
                 tableLayout.addView(row_space, 2*k-2);
 
                 tableLayout.addView(row, 2*k-1);
@@ -1018,8 +1034,7 @@ public class OCRActivity extends AppCompatActivity {
         TableLayout tableLayout = (TableLayout) findViewById(R.id.table);
 
         TableRow row = new TableRow(this);
-        row.setPadding(10,10,10,10);
-        row.setBackgroundColor(rgb(255, 255, 255));
+        row.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
         //TableRow.LayoutParams rowParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT);
         //row.setLayoutParams(tableParams);
         //row.setPadding(10, 10, 10, 10);
@@ -1033,13 +1048,14 @@ public class OCRActivity extends AppCompatActivity {
         text_a.setPadding(10, 10, 10, 10);
         text_a.setTextSize(20f);
         text_a.setId(2*count-1);    //id has to be positive. Order: a1=1, b1=2, a2=3, b2=4, ..
-        //text_date.setBackgroundColor(rgb(255, 0, 0));
+        text_a.setTextColor(getResources().getColor(R.color.font));
+
         EditText text_b = new EditText(this);
         text_b.setText("Price");
         text_b.setTextSize(20f);
         text_b.setPadding(10,10,10, 10);
         text_b.setId(2*count); //id has to be positive. Order: a1=1, b1=2, a2=3, b2=4, ..
-        //text_total.setBackgroundColor(rgb(0,0,255));
+        text_b.setTextColor(getResources().getColor(R.color.font));
 
         //RelativeLayout rl = new RelativeLayout(this);
 
@@ -1089,6 +1105,7 @@ public class OCRActivity extends AppCompatActivity {
 
         TableRow row_space = new TableRow(this);
         row_space.setPadding(10,10,10,10);
+        row_space.setBackgroundColor(getResources().getColor(R.color.colorSecond));
         tableLayout.addView(row_space, 2*count-2);
 
         tableLayout.addView(row, 2*count-1);

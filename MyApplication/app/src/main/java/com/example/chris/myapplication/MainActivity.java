@@ -783,7 +783,9 @@ public class MainActivity extends AppCompatActivity
                 //TableRow.LayoutParams rowParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT);
                 //row.setLayoutParams(tableParams);
                 //row.setPadding(10, 10, 10, 10);
-                row.setBackgroundColor(rgb(255, 255, 255));
+                //TODO Color row
+                row.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                //row.setBackgroundColor(rgb(255, 255, 255));
 
                 final String receipt_id = json.getJSONArray(Integer.toString(k)).getJSONObject(0).getString("ID");
                 //row.setId(receipt_id);
@@ -793,7 +795,7 @@ public class MainActivity extends AppCompatActivity
                 text_date.setText(receipt_date);
                 text_date.setPadding(10, 10, 10, 10);
                 text_date.setTextSize(30f);
-                text_date.setTextColor(getResources().getColor(R.color.white));
+                text_date.setTextColor(getResources().getColor(R.color.font));
                 text_date.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
                         Log.d(TAG, "ClickListener calls updateView(Product, receipt_id");
@@ -805,7 +807,7 @@ public class MainActivity extends AppCompatActivity
                 TextView text_total = new TextView(this);
                 text_total.setText(receipt_price);
                 text_total.setTextSize(30f);
-                text_total.setTextColor(getResources().getColor(R.color.white));
+                text_total.setTextColor(getResources().getColor(R.color.font));
                 text_total.setPadding(10,10,10, 10);
                 //text_total.setTextColor(rgb(0,0,0));
                 //text_total.setBackgroundColor(rgb(0,0,255));
@@ -834,9 +836,9 @@ public class MainActivity extends AppCompatActivity
                 //text_date.setLayoutParams(new TableLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT, 2f));
 
                 LinearLayout ll11 = new LinearLayout(this);
-                ll11.setBackgroundColor(getResources().getColor(R.color.black));
+                ll11.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
                 LinearLayout ll12 = new LinearLayout(this);
-                ll12.setBackgroundColor(getResources().getColor(R.color.black));
+                ll12.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
                 LinearLayout.LayoutParams param_ll11 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
 
                 LinearLayout.LayoutParams param_ll12 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
@@ -859,7 +861,7 @@ public class MainActivity extends AppCompatActivity
                 row.addView(ll1);
                 TableRow row_space = new TableRow(this);
                 row_space.setPadding(0,2,0,2);
-                row_space.setBackgroundColor(getResources().getColor(R.color.notBlack));
+                row_space.setBackgroundColor(getResources().getColor(R.color.colorSecond));
                 tableLayout.addView(row_space, 2*k-2);
 
                 tableLayout.addView(row, 2* k-1);
@@ -901,7 +903,7 @@ public class MainActivity extends AppCompatActivity
 
         TableLayout.LayoutParams tableParams = new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT);
         //tableLayout.setBackgroundColor(R.color.black);
-        tableLayout.getResources().getColor(R.color.black);
+        tableLayout.getResources().getColor(R.color.colorPrimary);
 
         //int red = Color.parseColor("#FF0000");
         //ll.setLayoutParams(new TableLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 3f));
@@ -927,7 +929,7 @@ public class MainActivity extends AppCompatActivity
                 text_name.setText(company_name);
                 text_name.setPadding(10, 10, 10, 10);
                 text_name.setTextSize(30f);
-                text_name.setTextColor(getResources().getColor(R.color.white));
+                text_name.setTextColor(getResources().getColor(R.color.font));
                 //text_name.setTextColor(rgb(0,0,0));
                 row.setTag(company_name);
                 text_name.setOnClickListener(new View.OnClickListener() {
@@ -941,7 +943,7 @@ public class MainActivity extends AppCompatActivity
                 text_total.setText(company_total);
                 text_total.setTextSize(30f);
                 text_total.setPadding(10,10,10, 10);
-                text_total.setTextColor(getResources().getColor(R.color.white));
+                text_total.setTextColor(getResources().getColor(R.color.font));
                 //text_total.setTextColor(rgb(0,0,0));
                 //text_total.setBackgroundColor(rgb(0,0,255));
 
@@ -966,9 +968,9 @@ public class MainActivity extends AppCompatActivity
                 //text_date.setLayoutParams(new TableLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT, 2f));
 
                 LinearLayout ll11 = new LinearLayout(this);
-                ll11.setBackgroundColor(getResources().getColor(R.color.black));
+                ll11.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
                 LinearLayout ll12 = new LinearLayout(this);
-                ll12.setBackgroundColor(getResources().getColor(R.color.black));
+                ll12.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
                 LinearLayout.LayoutParams param_ll11 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
 
                 LinearLayout.LayoutParams param_ll12 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
@@ -990,7 +992,7 @@ public class MainActivity extends AppCompatActivity
 
                 row.addView(ll1);
                 TableRow row_space = new TableRow(this);
-                row_space.setBackgroundColor(getResources().getColor(R.color.notBlack));
+                row_space.setBackgroundColor(getResources().getColor(R.color.colorSecond));
                 row_space.setPadding(0,2,0,2);
                 tableLayout.addView(row_space, 2*k-2);
 
@@ -1054,12 +1056,12 @@ public class MainActivity extends AppCompatActivity
                 text_name.setText(receipt_name);
                 text_name.setPadding(10, 10, 10, 10);
                 text_name.setTextSize(30f);
-                text_name.setTextColor(getResources().getColor(R.color.white));
+                text_name.setTextColor(getResources().getColor(R.color.font));
                 //text_date.setBackgroundColor(rgb(255, 0, 0));
                 TextView text_price = new TextView(this);
                 text_price.setText(receipt_price);
                 text_price.setTextSize(30f);
-                text_price.setTextColor(getResources().getColor(R.color.white));
+                text_price.setTextColor(getResources().getColor(R.color.font));
                 text_price.setPadding(10,10,10, 10);
                 //text_total.setBackgroundColor(rgb(0,0,255));
 
@@ -1087,9 +1089,9 @@ public class MainActivity extends AppCompatActivity
                 //text_date.setLayoutParams(new TableLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT, 2f));
 
                 LinearLayout ll11 = new LinearLayout(this);
-                ll11.setBackgroundColor(getResources().getColor(R.color.black));
+                ll11.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
                 LinearLayout ll12 = new LinearLayout(this);
-                ll12.setBackgroundColor(getResources().getColor(R.color.black));
+                ll12.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
                 LinearLayout.LayoutParams param_ll11 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
 
                 LinearLayout.LayoutParams param_ll12 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
@@ -1112,7 +1114,7 @@ public class MainActivity extends AppCompatActivity
                 row.addView(ll1);
                 TableRow row_space = new TableRow(this);
                 row_space.setPadding(0,2,0,2);
-                row_space.setBackgroundColor(getResources().getColor(R.color.notBlack));
+                row_space.setBackgroundColor(getResources().getColor(R.color.colorSecond));
                 tableLayout.addView(row_space, 2*k-2);
 
                 tableLayout.addView(row, 2*k-1);
@@ -1175,12 +1177,12 @@ public class MainActivity extends AppCompatActivity
                 text_name.setText(offer_name);
                 text_name.setPadding(10, 10, 10, 10);
                 text_name.setTextSize(30f);
-                text_name.setTextColor(getResources().getColor(R.color.white));
+                text_name.setTextColor(getResources().getColor(R.color.font));
                 //text_date.setBackgroundColor(rgb(255, 0, 0));
                 TextView text_total = new TextView(this);
                 text_total.setText(offer_price);
                 text_total.setTextSize(30f);
-                text_total.setTextColor(getResources().getColor(R.color.white));
+                text_total.setTextColor(getResources().getColor(R.color.font));
                 text_total.setPadding(10,10,10, 10);
                 //text_total.setTextColor(rgb(0,0,0));
                 //text_total.setBackgroundColor(rgb(0,0,255));
@@ -1189,8 +1191,8 @@ public class MainActivity extends AppCompatActivity
                 text_vendor.setText(offer_vendor);
                 text_vendor.setPadding(10, 10, 10, 10);
                 text_vendor.setTextSize(20f);
-                text_vendor.setTextColor(getResources().getColor(R.color.white));
-                text_vendor.setBackgroundColor(getResources().getColor(R.color.black));
+                text_vendor.setTextColor(getResources().getColor(R.color.font));
+                text_vendor.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
                 //text_vendor.setTextColor(rgb(0,0,0));
                 //text_vendor.setBackgroundColor(rgb(255,255,255));
 
@@ -1215,9 +1217,9 @@ public class MainActivity extends AppCompatActivity
                 //text_date.setLayoutParams(new TableLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT, 2f));
 
                 LinearLayout ll11 = new LinearLayout(this);
-                ll11.setBackgroundColor(getResources().getColor(R.color.black));
+                ll11.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
                 LinearLayout ll12 = new LinearLayout(this);
-                ll12.setBackgroundColor(getResources().getColor(R.color.black));
+                ll12.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
                 LinearLayout.LayoutParams param_ll11 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
 
                 LinearLayout.LayoutParams param_ll12 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
@@ -1245,7 +1247,7 @@ public class MainActivity extends AppCompatActivity
 
                 TableRow row_space = new TableRow(this);
                 row_space.setPadding(0,2,0,2);
-                row_space.setBackgroundColor(getResources().getColor(R.color.notBlack));
+                row_space.setBackgroundColor(getResources().getColor(R.color.colorSecond));
                 tableLayout.addView(row_space, 2*k-2);
 
                 tableLayout.addView(row, 2*k-1);

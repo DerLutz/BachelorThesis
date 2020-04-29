@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#000000</color>
-    <color name="colorPrimaryDark">@color/notBlack</color>
+    <color name="colorSecond">#424242</color>
+    <color name="font">#FFFFFF</color>
     <color name="colorAccent">#FF4081</color>
 
     <!-- http://meyerweb.com/eric/tools/color-blend/#339999::1:hex -->
     <color name="orange">#FF9933</color>
     <color name="purple">#FF4081</color>
-    <color name="colorSelected">#AAAAFF</color>
-    <color name="white">#FFFFFF</color>
-    <color name="black">#000000</color>
-    <color name="notBlack">#424242</color>
+
 
 </resources>
 
