@@ -668,11 +668,11 @@ public class MainActivity extends AppCompatActivity
         Log.d(TAG, "In onOptionsItemSelected");
         TextView name = (TextView) findViewById(R.id.name);
         LinearLayout ll_h = findViewById(R.id.linLayout_hor);
-        TextView name1 = new TextView(this);
-        TextView name2 = new TextView(this);
-        LinearLayout.LayoutParams param_left = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
+        TextView name1 = findViewById(R.id.name1);
+        TextView name2 = findViewById(R.id.name2);
+        //LinearLayout.LayoutParams param_left = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
 
-        LinearLayout.LayoutParams param_right = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 2f);
+        //LinearLayout.LayoutParams param_right = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 2f);
 
 
         switch (item.getItemId()) {
@@ -710,22 +710,32 @@ public class MainActivity extends AppCompatActivity
             case R.id.COMPANY:
                 Toast.makeText(getApplicationContext(),"Company Clicked",Toast.LENGTH_LONG).show();
                 Log.d(TAG, "Start getData in Company");
+                name1.setText("Name");
+                name2.setText("Total");
                 updateView("Company", "0");
                 return true;
 
             case R.id.RECEIPT:
                 Toast.makeText(getApplicationContext(),"RECEIPT Clicked",Toast.LENGTH_LONG).show();
                 Log.d(TAG, "Start getData in RECEIPT");
+                name1.setText("Date");
+                name2.setText("Total");
                 updateView("Receipt", "0");
                 return true;
 
             case R.id.PRODUCT:
                 Toast.makeText(getApplicationContext(),"Product Clicked",Toast.LENGTH_LONG).show();
                 Log.d(TAG, "Start getData in product");
+                name1.setText("Name");
+                name2.setText("Price");
                 updateView("Product", "0");
                 return true;
 
             case R.id.OFFER:
+                Toast.makeText(getApplicationContext(),"Offer Clicked",Toast.LENGTH_LONG).show();
+                Log.d(TAG, "Start getData in offer");
+                name1.setText("Name");
+                name2.setText("Price");
                 updateView("Offer", "0");
                 return true;
 
@@ -769,7 +779,7 @@ public class MainActivity extends AppCompatActivity
             int count = Integer.parseInt(json.getJSONArray("count").getJSONObject(0).getString("count"));
             for (int k = 1; k < count + 1; k++) {
                 TableRow row = new TableRow(this);
-                row.setPadding(10,10,10,10);
+                //row.setPadding(10,10,10,10);
                 //TableRow.LayoutParams rowParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT);
                 //row.setLayoutParams(tableParams);
                 //row.setPadding(10, 10, 10, 10);
@@ -849,6 +859,7 @@ public class MainActivity extends AppCompatActivity
                 row.addView(ll1);
                 TableRow row_space = new TableRow(this);
                 row_space.setPadding(0,2,0,2);
+                row_space.setBackgroundColor(getResources().getColor(R.color.notBlack));
                 tableLayout.addView(row_space, 2*k-2);
 
                 tableLayout.addView(row, 2* k-1);
@@ -889,6 +900,8 @@ public class MainActivity extends AppCompatActivity
         //tableLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
         TableLayout.LayoutParams tableParams = new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT);
+        //tableLayout.setBackgroundColor(R.color.black);
+        tableLayout.getResources().getColor(R.color.black);
 
         //int red = Color.parseColor("#FF0000");
         //ll.setLayoutParams(new TableLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 3f));
@@ -900,7 +913,7 @@ public class MainActivity extends AppCompatActivity
             for (int k = 1; k < count + 1; k++) {
                 TableRow row = new TableRow(this);
                 row.setTag("");
-                row.setPadding(10,10,10,10);
+                //row.setPadding(10,10,10,10);
                 //TableRow.LayoutParams rowParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT);
                 //row.setLayoutParams(tableParams);
                 //row.setPadding(10, 10, 10, 10);
@@ -977,6 +990,7 @@ public class MainActivity extends AppCompatActivity
 
                 row.addView(ll1);
                 TableRow row_space = new TableRow(this);
+                row_space.setBackgroundColor(getResources().getColor(R.color.notBlack));
                 row_space.setPadding(0,2,0,2);
                 tableLayout.addView(row_space, 2*k-2);
 
@@ -1026,7 +1040,7 @@ public class MainActivity extends AppCompatActivity
             int count = Integer.parseInt(json.getJSONArray("count").getJSONObject(0).getString("count"));
             for (int k = 1; k < count + 1; k++) {
                 TableRow row = new TableRow(this);
-                row.setPadding(10,10,10,10);
+                //row.setPadding(10,10,10,10);
                 //TableRow.LayoutParams rowParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT);
                 //row.setLayoutParams(tableParams);
                 //row.setPadding(10, 10, 10, 10);
@@ -1098,6 +1112,7 @@ public class MainActivity extends AppCompatActivity
                 row.addView(ll1);
                 TableRow row_space = new TableRow(this);
                 row_space.setPadding(0,2,0,2);
+                row_space.setBackgroundColor(getResources().getColor(R.color.notBlack));
                 tableLayout.addView(row_space, 2*k-2);
 
                 tableLayout.addView(row, 2*k-1);
@@ -1143,7 +1158,7 @@ public class MainActivity extends AppCompatActivity
             int count = Integer.parseInt(json.getJSONArray("count").getJSONObject(0).getString("count"));
             for (int k = 1; k < count + 1; k++) {
                 TableRow row = new TableRow(this);
-                row.setPadding(10,10,10,10);
+                //row.setPadding(10,10,10,10);
                 //TableRow.LayoutParams rowParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT);
                 //row.setLayoutParams(tableParams);
                 //row.setPadding(10, 10, 10, 10);
@@ -1175,6 +1190,7 @@ public class MainActivity extends AppCompatActivity
                 text_vendor.setPadding(10, 10, 10, 10);
                 text_vendor.setTextSize(20f);
                 text_vendor.setTextColor(getResources().getColor(R.color.white));
+                text_vendor.setBackgroundColor(getResources().getColor(R.color.black));
                 //text_vendor.setTextColor(rgb(0,0,0));
                 //text_vendor.setBackgroundColor(rgb(255,255,255));
 
@@ -1229,6 +1245,7 @@ public class MainActivity extends AppCompatActivity
 
                 TableRow row_space = new TableRow(this);
                 row_space.setPadding(0,2,0,2);
+                row_space.setBackgroundColor(getResources().getColor(R.color.notBlack));
                 tableLayout.addView(row_space, 2*k-2);
 
                 tableLayout.addView(row, 2*k-1);
@@ -1253,8 +1270,8 @@ public class MainActivity extends AppCompatActivity
         Log.d(TAG, "In onOptionsItemSelected");
         TextView name = (TextView) findViewById(R.id.name);
         LinearLayout ll_h = findViewById(R.id.linLayout_hor);
-        TextView name1 = new TextView(this);
-        TextView name2 = new TextView(this);
+        TextView name1 = findViewById(R.id.name1);
+        TextView name2 = findViewById(R.id.name2);
         LinearLayout.LayoutParams param_left = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
 
         LinearLayout.LayoutParams param_right = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 2f);

@@ -20,7 +20,7 @@
             android:name="com.google.android.actions"
             android:resource="@xml/tool_bar" />
 
-        <activity android:name=".MainActivity"
+        <activity android:name=".Receipt"
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
         <activity android:name=".CategoryInfo"
