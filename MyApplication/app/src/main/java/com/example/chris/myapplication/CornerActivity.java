@@ -119,7 +119,7 @@ public class CornerActivity extends AppCompatActivity {
         }
 
 
-        mainLayout = (RelativeLayout) findViewById(R.id.activity2);
+        //mainLayout = (RelativeLayout) findViewById(R.id.activity2);
         image = (ImageView) findViewById(R.id.image);
 
     }

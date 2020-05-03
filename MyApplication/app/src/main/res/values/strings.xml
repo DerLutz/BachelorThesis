@@ -1,4 +1,7 @@
 <resources>
-    <string name="app_name">App Name</string>
+    <string name="app_name">iReceipt</string>
     <string name="action_reset">Back</string>
+
+    <string name="drawer_open">Open</string>
+    <string name="drawer_close">Close</string>
 </resources>

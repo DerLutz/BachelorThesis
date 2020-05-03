@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.chris.myapplication">
-    <!-- TODO permissions like internet, camera, write images in gallery -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -14,30 +11,32 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:usesCleartextTraffic="true">
+        android:networkSecurityConfig="@xml/network_security_config">
+
+        <activity android:name=".TrendActivity"/>
+        <activity android:name=".OfferActivity" />
+        <activity android:name=".ProductActivity" />
+        <activity android:name=".ReceiptActivity" />
+        <activity android:name=".CompanyActivity" />
+        <activity
+            android:name=".OCRActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".CornerActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait" />
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
         <meta-data
             android:name="com.google.android.actions"
             android:resource="@xml/tool_bar" />
-
-        <activity android:name=".Receipt"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait" />
-        <activity android:name=".CategoryInfo"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".OCRActivity"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".CornerActivity"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".Activity3"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".Activity2"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait"/>
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -48,14 +47,9 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-
-        <activity android:name=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
     </application>
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
 </manifest>

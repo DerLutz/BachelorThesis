@@ -39,14 +39,20 @@ import android.widget.Toast;
 //import android.support.v7.widget.RecyclerView
 
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.navigation.NavigationView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -74,8 +80,11 @@ import static android.graphics.Color.rgb;
 
 //Select an image or make a photo, upload it to the server to detect the corner and receive the results
 
-public class MainActivity extends AppCompatActivity
-        implements CategoryRecView.ListItemClickListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+
+    DrawerLayout drawerLayout;
+    NavigationView navigationView;
+    Toolbar toolbar;
 
     //Todo passe Anzahl an Categorien an
     private static final int NUM_LIST_ITEMS = 100;
@@ -106,9 +115,6 @@ public class MainActivity extends AppCompatActivity
     int REQUEST_TAKE_PHOTO = 4;
     File file1;
     public static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 123;
-
-    private CategoryRecView mAdapter;
-    private RecyclerView mNumbersList;
 
     //For the call of Activity 2
     public static String URI_FILE="URI_FILE", X1="X1",X2="X2", X3="X3", X4="X4", Y1="Y1", Y2="Y2", Y3="Y3", Y4="Y4", SH="SH", SW="SW", O="O";
@@ -144,45 +150,31 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    Toolbar toolbar;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        TextView name = (TextView) findViewById(R.id.name);
-        name.setText("Company");
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-        Log.d(TAG, "Start getData in onCreate");
-        getData("Category", "0");
+        drawerLayout = findViewById(R.id.drawer_layout);
+        navigationView = findViewById(R.id.nav_view);
 
+        navigationView.setNavigationItemSelectedListener(this);
 
-        Log.d(TAG, "End of onCreate");
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
 
-    }
+        if (savedInstanceState == null){
+            Intent changeActivity = new Intent(MainActivity.this, CompanyActivity.class);
 
+            changeActivity.putExtra("CalledFrom", "0");
+            Log.d(TAG, "start CompanyActivity");
+            startActivity(changeActivity);
 
-    // COMPLETED (10) Override ListItemClickListener's onListItemClick method
-    /**
-     * This is where we receive our callback from
-     * {@link com.example.chris.myapplication.CategoryRecView.ListItemClickListener}
-     *
-     * This callback is invoked when you click on an item in the list.
-     *
-     * @param clickedItemIndex Index in the list of the item that was clicked.
-     */
-    @Override
-    public void onListItemClick(int clickedItemIndex) {
-        StringBuilder response = connectServerData();
-        //Todo get summe of receipts of category
-        Intent changeActivity = new Intent(MainActivity.this, CategoryInfo.class);
-        changeActivity.putExtra(TOTAL, Categories.getCategoryTotal(response, clickedItemIndex));
-        changeActivity.putExtra(NAME, Categories.getCategoryName(response, clickedItemIndex));
-
-        Log.d(TAG, "start ReceiptRecView");
-        startActivity(changeActivity);
-
+        }
     }
 
     @Override
@@ -311,6 +303,18 @@ public class MainActivity extends AppCompatActivity
         AsyncTaskUploadClass AsyncTaskUploadClassOBJ = new AsyncTaskUploadClass();
         AsyncTaskUploadClassOBJ.execute();
 
+    }
+
+
+    @Override
+    public void onBackPressed(){
+
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)){
+            drawerLayout.closeDrawers();
+        }
+        else {
+            super.onBackPressed();
+        }
     }
 
 
@@ -539,143 +543,13 @@ public class MainActivity extends AppCompatActivity
         alert.show();
     }
 
-    public StringBuilder connectServerData (){
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
-        //Create Connection
-        try{
-            String ServerUploadPath ="http://192.168.188.67:1337/getData";
-            url = new URL(ServerUploadPath);
-            httpURLConnection = (HttpURLConnection) url.openConnection();
-            httpURLConnection.setReadTimeout(30000);
-            httpURLConnection.setConnectTimeout(30000);
-            httpURLConnection.setRequestMethod("POST");
-            httpURLConnection.setRequestProperty("Content-Type", "text/plain");
-            //httpURLConnection.setDoInput(true);
-            httpURLConnection.setDoOutput(true);
-
-            outputStream = httpURLConnection.getOutputStream();
-            bufferedWriter = new BufferedWriter(
-                    new OutputStreamWriter(outputStream, "UTF-8"));
-            String send = "Category";
-            send = send + "\n" + "1";
-            bufferedWriter.write((send));
-
-            bufferedWriter.flush();
-            bufferedWriter.close();
-            outputStream.close();
-
-
-            //Receive answer from server
-            RC = httpURLConnection.getResponseCode();
-            if (RC == HttpsURLConnection.HTTP_OK) {
-                bufferedReader = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream()));
-                stringBuilder = new StringBuilder();
-                String RC2;
-                while ((RC2 = bufferedReader.readLine()) != null){
-                    stringBuilder.append(RC2);
-                }
-            }
-            Log.d(TAG, "Answer data category connect to server: " + stringBuilder.toString());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    return stringBuilder;
-    }
-
-    private void getData(String data, String extra){
-
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
-        //Create Connection
-        try{
-            String ServerUploadPath ="http://192.168.188.67:5000/getData";
-            url = new URL(ServerUploadPath);
-            httpURLConnection = (HttpURLConnection) url.openConnection();
-            httpURLConnection.setReadTimeout(30000);
-            httpURLConnection.setConnectTimeout(30000);
-            httpURLConnection.setRequestMethod("POST");
-            httpURLConnection.setRequestProperty("Content-Type", "text/plain");
-            //httpURLConnection.setDoInput(true);
-            httpURLConnection.setDoOutput(true);
-
-            outputStream = httpURLConnection.getOutputStream();
-            bufferedWriter = new BufferedWriter(
-                    new OutputStreamWriter(outputStream, "UTF-8"));
-            String send = data;
-            send = send + "\n" + extra;
-            bufferedWriter.write((send));
-
-            bufferedWriter.flush();
-            bufferedWriter.close();
-            outputStream.close();
-
-
-            //Receive answer from server
-            RC = httpURLConnection.getResponseCode();
-            if (RC == HttpsURLConnection.HTTP_OK) {
-                bufferedReader = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream()));
-                stringBuilder = new StringBuilder();
-                String RC2;
-                while ((RC2 = bufferedReader.readLine()) != null){
-                    stringBuilder.append(RC2);
-                }
-            }
-            Log.d(TAG, "Answer data server: " + stringBuilder.toString());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        switch (data){
-            case "Receipt":
-                Log.d(TAG, "Start receipt_visualization");
-                receipt_visualization(stringBuilder);
-                break;
-
-            case "Category":
-                Log.d(TAG, "Start category_visualization");
-                category_visualization(stringBuilder);
-                break;
-
-            case "Products":
-                Log.d(TAG, "Start product_visualization");
-                product_visualization(stringBuilder);
-                break;
-
-            case "Offers":
-                Log.d(TAG, "Start offer_visualization");
-                offers_visualization(stringBuilder);
-                break;
-
-            default:
-                Log.d(TAG, "Something went wrong in the Switch cases before interpreting JSON");
-        }
-
-        Log.d(TAG, "Finished getData");
-    }
-
     @Override
-    public boolean onCreateOptionsMenu(Menu menu){
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.toolbar_main_menu,menu);
-        Log.d(TAG, "In onCreateOptionsMenu");
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
 
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
+        Intent changeActivity;
         Log.d(TAG, "In onOptionsItemSelected");
-        TextView name = (TextView) findViewById(R.id.name);
-        LinearLayout ll_h = findViewById(R.id.linLayout_hor);
-        TextView name1 = findViewById(R.id.name1);
-        TextView name2 = findViewById(R.id.name2);
-        //LinearLayout.LayoutParams param_left = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
 
-        //LinearLayout.LayoutParams param_right = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 2f);
-
-
-        switch (item.getItemId()) {
+        switch (menuItem.getItemId()) {
             case R.id.ADD:
                 Toast.makeText(getApplicationContext(),"Add Clicked",Toast.LENGTH_LONG).show();
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
@@ -708,40 +582,55 @@ public class MainActivity extends AppCompatActivity
                 return true;
 
             case R.id.COMPANY:
-                Toast.makeText(getApplicationContext(),"Company Clicked",Toast.LENGTH_LONG).show();
+                /*Toast.makeText(getApplicationContext(),"Company Clicked",Toast.LENGTH_LONG).show();
                 Log.d(TAG, "Start getData in Company");
                 name1.setText("Name");
                 name2.setText("Total");
-                updateView("Company", "0");
-                return true;
+                updateView("Company", "0");*/
+
+                changeActivity = new Intent(MainActivity.this, CompanyActivity.class);
+
+                changeActivity.putExtra("CalledFrom", "0");
+                Log.d(TAG, "start CompanyActivity");
+                startActivity(changeActivity);
+                break;
+
 
             case R.id.RECEIPT:
-                Toast.makeText(getApplicationContext(),"RECEIPT Clicked",Toast.LENGTH_LONG).show();
-                Log.d(TAG, "Start getData in RECEIPT");
-                name1.setText("Date");
-                name2.setText("Total");
-                updateView("Receipt", "0");
-                return true;
+                changeActivity = new Intent(MainActivity.this, ReceiptActivity.class);
+
+                changeActivity.putExtra("CalledFrom", "0");
+                Log.d(TAG, "start ReceiptActivity");
+                startActivity(changeActivity);
+                break;
 
             case R.id.PRODUCT:
-                Toast.makeText(getApplicationContext(),"Product Clicked",Toast.LENGTH_LONG).show();
-                Log.d(TAG, "Start getData in product");
-                name1.setText("Name");
-                name2.setText("Price");
-                updateView("Product", "0");
-                return true;
+                changeActivity = new Intent(MainActivity.this, ProductActivity.class);
+
+                changeActivity.putExtra("CalledFrom", "0");
+                Log.d(TAG, "start ProductActivity");
+                startActivity(changeActivity);
+                break;
 
             case R.id.OFFER:
-                Toast.makeText(getApplicationContext(),"Offer Clicked",Toast.LENGTH_LONG).show();
-                Log.d(TAG, "Start getData in offer");
-                name1.setText("Name");
-                name2.setText("Price");
-                updateView("Offer", "0");
-                return true;
+                changeActivity = new Intent(MainActivity.this, OfferActivity.class);
+
+                changeActivity.putExtra("CalledFrom", "0");
+                Log.d(TAG, "start OfferActivity");
+                startActivity(changeActivity);
+                break;
+
+            case R.id.TREND:
+                changeActivity = new Intent(MainActivity.this, TrendActivity.class);
+
+                changeActivity.putExtra("CalledFrom", "0");
+                Log.d(TAG, "start TrendActivity");
+                startActivity(changeActivity);
+                break;
 
             default:
 
-                super.onOptionsItemSelected(item);
+                super.onOptionsItemSelected(menuItem);
 
         }
         return true;
@@ -1305,7 +1194,7 @@ public class MainActivity extends AppCompatActivity
 
                 ll_h.addView(name1, param_left);
                 ll_h.addView(name2, param_right);
-                getData("Category", extra);
+                //getData("Category", extra);
                 break;
 
             case "Receipt":
@@ -1338,7 +1227,7 @@ public class MainActivity extends AppCompatActivity
 
                 ll_h.addView(name1, param_left);
                 ll_h.addView(name2, param_right);
-                getData("Receipt", extra);
+                //getData("Receipt", extra);
                 break;
 
             case "Product":
@@ -1371,7 +1260,7 @@ public class MainActivity extends AppCompatActivity
 
                 ll_h.addView(name1, param_left);
                 ll_h.addView(name2, param_right);
-                getData("Products", extra);
+                //getData("Products", extra);
                 break;
 
             case "Offer":
@@ -1398,7 +1287,7 @@ public class MainActivity extends AppCompatActivity
 
                 ll_h.addView(name1, param_left);
                 ll_h.addView(name2, param_right);
-                getData("Offers", extra);
+                //getData("Offers", extra);
                 break;
         }
     }

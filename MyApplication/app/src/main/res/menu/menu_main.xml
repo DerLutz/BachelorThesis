@@ -8,11 +8,13 @@
     <item
         android:id="@+id/action_name"
         android:title="Crop"
+        android:icon="@drawable/ic_content_cut_black_24dp"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/back"
         android:title="Back "
+        android:icon="@drawable/ic_arrow_back_black_24dp"
         app:showAsAction="always"/>
 
 </menu>
