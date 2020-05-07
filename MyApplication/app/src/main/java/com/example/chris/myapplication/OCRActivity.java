@@ -7,7 +7,12 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.RectF;
+import android.graphics.drawable.BitmapDrawable;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -32,6 +37,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,6 +45,7 @@ import org.opencv.android.Utils;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint2f;
 import org.opencv.core.Point;
+import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
 import java.io.BufferedReader;
@@ -92,6 +99,22 @@ public class OCRActivity extends AppCompatActivity {
 
         Log.d(TAG, "OCR Activity started");
 
+        Toolbar toolbar = findViewById(R.id.toolbar);
+
+        /*Toolbar toolbar = new Toolbar(this);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, 168);
+        toolbar.setLayoutParams(layoutParams);
+        toolbar.setPopupTheme(R.style.AppTheme);
+        toolbar.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+        toolbar.setVisibility(View.VISIBLE);
+
+        // Assuming in activity_main, you are using LinearLayout as root
+        RelativeLayout relativLayout = findViewById(R.id.cornerActivity);
+        relativLayout.addView(toolbar, 0);*/
+
+        setSupportActionBar(toolbar);
+
         cut_image();
     }
 
@@ -118,7 +141,6 @@ public class OCRActivity extends AppCompatActivity {
             size_height = intent.getStringExtra(CornerActivity.IMG_HEIGHT);
             size_width = intent.getStringExtra(CornerActivity.IMG_WIDTH);
 
-            orientation =  Integer.parseInt(intent.getStringExtra(CornerActivity.O));
         }
         catch (Exception e){
             e.printStackTrace();
@@ -149,23 +171,25 @@ public class OCRActivity extends AppCompatActivity {
             Mat original_image = new Mat();
             Utils.bitmapToMat(bitmap, original_image);
 
+            int a = original_image.rows();
+            Log.d(TAG, "a: "+a);
             Log.d(TAG, "ratio: "+ratio_height);
-            Log.d(TAG, "c1y: "+(Integer.parseInt(c1y)*ratio_height));
-            Log.d(TAG, "c1x: "+(Integer.parseInt(c1x)*ratio_width));
+            Log.d(TAG, "c1y: "+(Float.parseFloat(c1y)*ratio_height));
+            Log.d(TAG, "c1x: "+(Float.parseFloat(c1x)*ratio_width));
 
             /* only draw points for checking that i have the correct at bitmap
-            Imgproc.circle(original_image, new Point(Integer.parseInt(c1x)*ratio_width, Integer.parseInt(c1y)*ratio_height), 10, new Scalar(255, 0, 0), 10, 8, 0);
-            Imgproc.circle(original_image, new Point(Integer.parseInt(c2x)*ratio_width, Integer.parseInt(c2y)*ratio_height), 10, new Scalar(355, 0, 0), 10, 8, 0);
-            Imgproc.circle(original_image, new Point(Integer.parseInt(c3x)*ratio_width, Integer.parseInt(c3y)*ratio_height), 10, new Scalar(255, 0, 0), 10, 8, 0);
-            Imgproc.circle(original_image, new Point(Integer.parseInt(c4x)*ratio_width, Integer.parseInt(c4y)*ratio_height), 10, new Scalar(155, 0, 0), 10, 8, 0);
+            Imgproc.circle(original_image, new Point(Float.parseFloat(c1x)*ratio_width, Float.parseFloat(c1y)*ratio_height), 10, new Scalar(255, 0, 0), 20, 18, 0);
+            Imgproc.circle(original_image, new Point(Float.parseFloat(c2x)*ratio_width, Float.parseFloat(c2y)*ratio_height ), 10, new Scalar(355, 0, 0), 20, 18, 0);
+            Imgproc.circle(original_image, new Point(Float.parseFloat(c3x)*ratio_width, Float.parseFloat(c3y)*ratio_height ), 10, new Scalar(255, 0, 0), 20, 18, 0);
+            Imgproc.circle(original_image, new Point(Float.parseFloat(c4x)*ratio_width, Float.parseFloat(c4y)*ratio_height ), 10, new Scalar(155, 0, 0), 20, 18, 0);
             */
 
             //Move detected corner in corners of whole image; affine transform
             Point[] srcTri = new Point[4];
-            srcTri[0] = new Point(Integer.parseInt(c1x)*ratio_width, Integer.parseInt(c1y)*ratio_height );
-            srcTri[1] = new Point( Integer.parseInt(c2x)*ratio_width, Integer.parseInt(c2y)*ratio_height );
-            srcTri[2] = new Point( Integer.parseInt(c3x)*ratio_width, Integer.parseInt(c3y)*ratio_height );
-            srcTri[3] = new Point( Integer.parseInt(c4x)*ratio_width, Integer.parseInt(c4y)*ratio_height );
+            srcTri[0] = new Point(Float.parseFloat(c1x)*ratio_width, Float.parseFloat(c1y)*ratio_height );
+            srcTri[2] = new Point( Float.parseFloat(c2x)*ratio_width, Float.parseFloat(c2y)*ratio_height );
+            srcTri[3] = new Point( Float.parseFloat(c3x)*ratio_width, Float.parseFloat(c3y)*ratio_height );
+            srcTri[1] = new Point( Float.parseFloat(c4x)*ratio_width, Float.parseFloat(c4y)*ratio_height );
 
             //Where the points should be
 
@@ -175,12 +199,6 @@ public class OCRActivity extends AppCompatActivity {
             disTri[2] = new Point( original_image.cols(), 0 );
             disTri[3] = new Point( original_image.cols(), original_image.rows() );
 
-            if (orientation == 0){
-                disTri[0] = new Point( 0, 0 );
-                disTri[2] = new Point( 0, original_image.rows() );
-                disTri[1] = new Point( original_image.cols(), 0 );
-                disTri[3] = new Point( original_image.cols(), original_image.rows() );
-            }
 
             Mat warpMat = Imgproc.getPerspectiveTransform(new MatOfPoint2f(srcTri), new MatOfPoint2f(disTri));
             //Mat warpMat = Imgproc.getPerspectiveTransform( new MatOfPoint2f(srcTri), new MatOfPoint2f(disTri) );
@@ -190,7 +208,6 @@ public class OCRActivity extends AppCompatActivity {
             Log.d(TAG, "start AffineTransform");
             Imgproc.warpPerspective( original_image, warpDst, warpMat, warpDst.size() );
             Log.d(TAG, "AffineTransform done");
-
 
 
             Utils.matToBitmap(warpDst, bitmap);
@@ -240,6 +257,7 @@ public class OCRActivity extends AppCompatActivity {
         if (id == R.id.save) {
             save();
             Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra("CallFrom", "0");
             startActivity(intent);
         }
 
@@ -311,6 +329,7 @@ public class OCRActivity extends AppCompatActivity {
             //Create Connection
             try {
                 String ServerUploadPath = "http://192.168.188.54:5001/ocr";
+                //String ServerUploadPath = "http://192.168.188.54:1337/cornerDetection";
                 url = new URL(ServerUploadPath);
                 httpURLConnection = (HttpURLConnection) url.openConnection();
                 httpURLConnection.setReadTimeout(60000);
@@ -1008,9 +1027,24 @@ public class OCRActivity extends AppCompatActivity {
     private String collect_results() {
         JSONObject obj = new JSONObject();
 
+        // for the rows company, date and total, because they have textview and edittext
         try {
+            for (int i = 1; 1<4; i++){
+                TextView ttext_a = findViewById(i*2-1);
+                EditText etext_b = findViewById(i * 2);
+                String text_a = ttext_a.getText().toString();
+                String text_b = etext_b.getText().toString();
+
+                obj.put(text_a, text_b);
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            Toast.makeText(OCRActivity.this, "A problem while uploading appeared", Toast.LENGTH_SHORT).show();
+        }
+        try{
             //read edittext views and write the values is json file
-            for (int i = 1; i < count + 1; i++) {
+            for (int i = 4; i < count + 1; i++) {
                 String id = Integer.toString(i + 1);
                 EditText etext_a = findViewById(i * 2 - 1);
                 EditText etext_b = findViewById(i * 2);

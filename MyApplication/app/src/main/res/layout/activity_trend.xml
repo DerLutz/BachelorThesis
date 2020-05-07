@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".TrendActivity"
     android:id="@+id/drawer_layout"
-    tools:openDrawer="start">
+    tools:openDrawer="start"
+    android:hardwareAccelerated="true">
 
     <LinearLayout
         android:layout_width="match_parent"

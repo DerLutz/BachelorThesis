@@ -7,11 +7,10 @@
     <item
         android:id="@+id/save"
         android:title="Save"
-        app:showAsAction="always"/>
+        android:textColor="@color/font"/>
 
     <item
         android:id="@+id/back"
-        android:title="Back "
-        app:showAsAction="always"/>
+        android:title="Back "/>
 
 </menu>

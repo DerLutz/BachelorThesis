@@ -168,11 +168,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toggle.syncState();
 
         if (savedInstanceState == null){
-            Intent changeActivity = new Intent(MainActivity.this, CompanyActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putString("CalledFrom", "0");
+            Fragment_company fragment_company = new Fragment_company();
+            fragment_company.setArguments(bundle);
 
-            changeActivity.putExtra("CalledFrom", "0");
-            Log.d(TAG, "start CompanyActivity");
-            startActivity(changeActivity);
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment_company).commit();
+
 
         }
     }
@@ -588,44 +590,77 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 name2.setText("Total");
                 updateView("Company", "0");*/
 
-                changeActivity = new Intent(MainActivity.this, CompanyActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("CalledFrom", "0");
+                Fragment_company fragment_company = new Fragment_company();
+                fragment_company.setArguments(bundle);
 
-                changeActivity.putExtra("CalledFrom", "0");
-                Log.d(TAG, "start CompanyActivity");
-                startActivity(changeActivity);
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment_company).commit();
+
                 break;
 
 
             case R.id.RECEIPT:
-                changeActivity = new Intent(MainActivity.this, ReceiptActivity.class);
+                bundle = new Bundle();
+                bundle.putString("CalledFrom", "0");
+                Fragment_receipt fragment_receipt = new Fragment_receipt();
+                fragment_receipt.setArguments(bundle);
+
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment_receipt).commit();
+
+
+                /*changeActivity = new Intent(CompanyActivity.this, ReceiptActivity.class);
 
                 changeActivity.putExtra("CalledFrom", "0");
                 Log.d(TAG, "start ReceiptActivity");
-                startActivity(changeActivity);
+                startActivity(changeActivity);*/
                 break;
 
             case R.id.PRODUCT:
-                changeActivity = new Intent(MainActivity.this, ProductActivity.class);
+                bundle = new Bundle();
+                bundle.putString("CalledFrom", "0");
+                Fragment_product fragment_product = new Fragment_product();
+                fragment_product.setArguments(bundle);
+
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment_product).commit();
+
+                /*changeActivity = new Intent(CompanyActivity.this, ProductActivity.class);
 
                 changeActivity.putExtra("CalledFrom", "0");
                 Log.d(TAG, "start ProductActivity");
-                startActivity(changeActivity);
+                startActivity(changeActivity);*/
                 break;
 
             case R.id.OFFER:
-                changeActivity = new Intent(MainActivity.this, OfferActivity.class);
+                bundle = new Bundle();
+                bundle.putString("CalledFrom", "0");
+                Fragment_offer fragment_offer = new Fragment_offer();
+                fragment_offer.setArguments(bundle);
+
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment_offer).commit();
+
+
+                /*changeActivity = new Intent(CompanyActivity.this, OfferActivity.class);
 
                 changeActivity.putExtra("CalledFrom", "0");
                 Log.d(TAG, "start OfferActivity");
-                startActivity(changeActivity);
+                startActivity(changeActivity);*/
                 break;
 
             case R.id.TREND:
-                changeActivity = new Intent(MainActivity.this, TrendActivity.class);
+                bundle = new Bundle();
+                bundle.putString("CalledFrom", "0");
+                Fragment_trend fragment_trend = new Fragment_trend();
+                fragment_trend.setArguments(bundle);
+
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment_trend).commit();
+
+
+                /*changeActivity = new Intent(CompanyActivity.this, TrendActivity.class);
 
                 changeActivity.putExtra("CalledFrom", "0");
                 Log.d(TAG, "start TrendActivity");
-                startActivity(changeActivity);
+                startActivity(changeActivity);*/
                 break;
 
             default:
