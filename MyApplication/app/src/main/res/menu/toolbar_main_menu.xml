@@ -19,9 +19,11 @@
             android:id="@+id/OFFER"
             android:title="Offers"/>
 
+    </group>
+
         <item
             android:id="@+id/TREND"
             android:title="Trends"/>
 
-    </group>
+
 </menu>

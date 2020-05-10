@@ -6,12 +6,207 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity"
     android:orientation="vertical"
-    android:hardwareAccelerated="true">
+    android:background="@color/Background">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/NavigationHeader">
+
+        <TextView
+            android:id="@+id/tvRg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:textColor="@color/font"
+            android:text="Time area"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvRg"
+            android:layout_centerHorizontal="true"
+            android:orientation="horizontal"
+            android:showDividers="beginning|middle|end"
+            android:layout_marginTop="10dp"
+            android:outlineSpotShadowColor="@color/font"
+            android:id="@+id/radioGroup_time" >
+
+
+            <RadioButton
+                android:id="@+id/rb1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Week"
+                android:textColor="@color/font"
+                android:checked="false" />
+
+            <RadioButton
+                android:id="@+id/rb2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Month"
+                android:textColor="@color/font"
+                android:checked="false" />
+
+            <RadioButton
+                android:id="@+id/rb3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Year"
+                android:textColor="@color/font"
+                android:checked="false" />
+
+            <RadioButton
+                android:id="@+id/rb4"
+                android:textColor="@color/font"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Lifetime"
+                android:checked="true" />
+
+        </RadioGroup>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/RL_aggregation"
+            android:layout_below="@+id/radioGroup_time"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Aggregation"
+                android:textColor="@color/font"
+                android:padding="10dp"
+                android:id="@+id/tv_agg"/>
+
+            <RadioGroup
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/radioGroup_aggregation"
+                android:orientation="vertical"
+                android:outlineAmbientShadowColor="@color/font"
+                android:layout_below="@+id/tv_agg">
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Company"
+                    android:textColor="@color/font"
+                    android:checked="true"
+                    android:id="@+id/rb_c_comp"/>
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Product"
+                    android:textColor="@color/font"
+                    android:checked="false"
+                    android:id="@+id/rb_c_prod"/>
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Specific "
+                    android:textColor="@color/font"
+                    android:checked="false"
+                    android:id="@+id/rb_c_specific"/>
+
+            </RadioGroup>
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/et_product"
+                android:textColor="@color/font"
+                android:layout_alignBottom="@+id/radioGroup_aggregation"
+                android:layout_toRightOf="@+id/radioGroup_aggregation"
+                android:text="Product"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" and/or "
+                android:textColor="@color/font"
+                android:layout_toRightOf="@+id/et_product"
+                android:layout_alignBottom="@+id/radioGroup_aggregation"
+                android:id="@+id/tv_in"
+                android:padding="10dp"/>
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Company"
+                android:textColor="@color/font"
+                android:layout_toRightOf="@+id/tv_in"
+                android:layout_alignBottom="@+id/radioGroup_aggregation"
+                android:id="@+id/et_comp"/>
+
+
+        </RelativeLayout>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sort:"
+            android:textColor="@color/font"
+            android:padding="10dp"
+            android:id="@+id/tv_sort"
+            android:layout_below="@+id/RL_aggregation"/>
+
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/radioGroup_sort"
+            android:orientation="horizontal"
+            android:outlineAmbientShadowColor="@color/font"
+            android:outlineSpotShadowColor="@color/font"
+            android:layout_below="@+id/tv_sort">
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Amount"
+                android:textColor="@color/font"
+                android:checked="false"
+                android:id="@+id/rb_p_amount"/>
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Total"
+                android:textColor="@color/font"
+                android:checked="true"
+                android:id="@+id/rb_p_total"/>
+
+
+        </RadioGroup>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SUBMIT"
+            android:id="@+id/buttonSubmit"
+            android:background="@color/Background"
+            android:layout_below="@+id/radioGroup_sort"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/font"
+            android:layout_marginTop="10dp"/>
+
+    </RelativeLayout>
+
 
     <com.jjoe64.graphview.GraphView
         android:layout_width="match_parent"
-        android:layout_height="200dip"
+        android:layout_height="fill_parent"
         android:id="@+id/graph"
-        android:background="@color/colorSecond"/>
+        android:background="@color/GraphView"
+        android:hardwareAccelerated="true"/>
 
 </LinearLayout>

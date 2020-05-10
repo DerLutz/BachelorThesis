@@ -7,7 +7,7 @@
     tools:context=".ReceiptActivity"
     android:orientation="vertical"
     android:id="@+id/LL"
-    android:background="@color/colorPrimary">
+    android:background="@color/Background">
 
     <TextView
         android:id="@+id/name"
@@ -18,14 +18,14 @@
         android:layout_centerHorizontal="true"
         android:textAllCaps="true"
         android:text="RECEIPTS"
-        android:background="@color/colorPrimary"
+        android:background="@color/Background"
         android:textColor="@color/font"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="2dp"
-        android:background="@color/colorSecond"/>
+        android:background="@color/Separator"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -61,7 +61,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/scrollView"
         android:padding="5dp"
-        android:background="@color/colorPrimary">
+        android:background="@color/Background">
 
         <TableLayout
             android:layout_width="match_parent"

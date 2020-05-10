@@ -4,20 +4,22 @@
     android:gravity="bottom"
     android:layout_width="match_parent"
     android:padding="16dp"
-    android:background="@color/colorPrimary"
+    android:background="@color/NavigationHeader"
     android:layout_height="176dp">
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:id="@+id/user_img"
-        android:paddingTop="8dp"/>
+        android:paddingTop="8dp"
+        android:src="@mipmap/ic_launcher_round"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="User Name"
         android:textColor="@color/font"
+        android:textSize="20dp"
         android:paddingTop="8dp"/>
 
 

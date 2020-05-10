@@ -29,7 +29,12 @@ public class Fragment_receipt extends Fragment {
         View nav_view = inflater.inflate(R.layout.fragment_company, container, false);
 
         TextView name = (TextView) nav_view.findViewById(R.id.name);
-        name.setText("RECEIPTS");
+        if (extra.equals("0")) {
+            name.setText("RECEIPTS");
+        }
+        else {
+            name.setText(extra);
+        }
         LinearLayout ll_h = nav_view.findViewById(R.id.linLayout_hor);
         TextView name1 = nav_view.findViewById(R.id.name1);
         TextView name2 = nav_view.findViewById(R.id.name2);
@@ -85,7 +90,7 @@ public class Fragment_receipt extends Fragment {
                 //row.setLayoutParams(tableParams);
                 //row.setPadding(10, 10, 10, 10);
                 //TODO Color row
-                row.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                row.setBackgroundColor(getResources().getColor(R.color.Background));
                 //row.setBackgroundColor(rgb(255, 255, 255));
 
                 final String receipt_id = json.getJSONArray(Integer.toString(k)).getJSONObject(0).getString("ID");
@@ -142,9 +147,9 @@ public class Fragment_receipt extends Fragment {
                 //text_date.setLayoutParams(new TableLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT, 2f));
 
                 LinearLayout ll11 = new LinearLayout(getActivity());
-                ll11.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                ll11.setBackgroundColor(getResources().getColor(R.color.Background));
                 LinearLayout ll12 = new LinearLayout(getActivity());
-                ll12.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                ll12.setBackgroundColor(getResources().getColor(R.color.Background));
                 LinearLayout.LayoutParams param_ll11 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
 
                 LinearLayout.LayoutParams param_ll12 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
@@ -167,7 +172,7 @@ public class Fragment_receipt extends Fragment {
                 row.addView(ll1);
                 TableRow row_space = new TableRow(getActivity());
                 row_space.setPadding(0,2,0,2);
-                row_space.setBackgroundColor(getResources().getColor(R.color.colorSecond));
+                row_space.setBackgroundColor(getResources().getColor(R.color.Separator));
                 tableLayout.addView(row_space, 2*k-2);
 
                 tableLayout.addView(row, 2* k-1);

@@ -7,7 +7,7 @@
     android:id="@+id/ocr_activity"
     tools:context=".OCRActivity"
     android:orientation="vertical"
-    android:background="@color/colorPrimary">
+    android:background="@color/Background">
 
     <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
@@ -15,7 +15,7 @@
         android:id="@+id/toolbar"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        android:background="@color/colorPrimary"
+        android:background="@color/Toolbar"
         android:elevation="4dp"
         app:menu="@menu/menu3" />
 
@@ -27,22 +27,15 @@
         android:gravity="center"
         android:textSize="30dp"
         android:id="@+id/result"
-        android:background="@color/colorPrimary"
+        android:background="@color/Background"
         android:textColor="@color/font"/>
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/addButton"
-        android:text="Add Missing Product"
-        android:textSize="20dp"/>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/scrollView"
         android:padding="5dp"
-        android:background="@color/colorPrimary">
+        android:background="@color/Separator">
 
         <TableLayout
             android:layout_width="match_parent"

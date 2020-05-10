@@ -231,14 +231,14 @@ public class OCRActivity extends AppCompatActivity {
 
         UploadImageToServer();
         visualize_results();
-        Button addButton = findViewById(R.id.addButton);
+        /*Button addButton = findViewById(R.id.addButton);
         addButton.setOnClickListener(
                 new Button.OnClickListener() {
                     public void onClick(View v) {
                         addRow();
                     }
                 }
-        );
+        );*/
 
     }
 
@@ -388,7 +388,7 @@ public class OCRActivity extends AppCompatActivity {
             if (currentLine.equals("Company")){
                 TableRow row = new TableRow(this);
                 //row.setPadding(10,10,10,10);
-                row.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                row.setBackgroundColor(getResources().getColor(R.color.Background));
 
                 // Add Row Option
                 row.setOnLongClickListener(new View.OnLongClickListener() {
@@ -453,7 +453,7 @@ public class OCRActivity extends AppCompatActivity {
                 row.addView(ll1);
                 TableRow row_space = new TableRow(this);
                 row_space.setPadding(10,10,10,10);
-                row_space.setBackgroundColor(getResources().getColor(R.color.colorSecond));
+                row_space.setBackgroundColor(getResources().getColor(R.color.Separator));
                 tableLayout.addView(row_space, 2*1-2);
 
                 tableLayout.addView(row, 2*1-1);
@@ -464,7 +464,7 @@ public class OCRActivity extends AppCompatActivity {
             }
             else{
                 TableRow row = new TableRow(this);
-                row.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                row.setBackgroundColor(getResources().getColor(R.color.Background));
 
                 // Add Row Option
                 row.setOnLongClickListener(new View.OnLongClickListener() {
@@ -524,7 +524,7 @@ public class OCRActivity extends AppCompatActivity {
                 row.addView(ll1);
                 TableRow row_space = new TableRow(this);
                 row_space.setPadding(10,10,10,10);
-                row_space.setBackgroundColor(getResources().getColor(R.color.colorSecond));
+                row_space.setBackgroundColor(getResources().getColor(R.color.Separator));
                 tableLayout.addView(row_space, 2*1-2);
 
                 tableLayout.addView(row, 2*1-1);
@@ -535,7 +535,7 @@ public class OCRActivity extends AppCompatActivity {
             currentLine = json.getJSONArray(Integer.toString(counter)).getJSONObject(0).getString("a");
             if (currentLine.equals("Date")){
                 TableRow row = new TableRow(this);
-                row.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                row.setBackgroundColor(getResources().getColor(R.color.Background));
 
                 // Add Row Option
                 row.setOnLongClickListener(new View.OnLongClickListener() {
@@ -601,7 +601,7 @@ public class OCRActivity extends AppCompatActivity {
                 row.addView(ll1);
                 TableRow row_space = new TableRow(this);
                 row_space.setPadding(10,10,10,10);
-                row_space.setBackgroundColor(getResources().getColor(R.color.colorSecond));
+                row_space.setBackgroundColor(getResources().getColor(R.color.Separator));
                 tableLayout.addView(row_space, 2*2-2);
 
                 tableLayout.addView(row, 2*2-1);
@@ -612,7 +612,7 @@ public class OCRActivity extends AppCompatActivity {
             }
             else{
                 TableRow row = new TableRow(this);
-                row.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                row.setBackgroundColor(getResources().getColor(R.color.Background));
 
                 // Add Row Option
                 row.setOnLongClickListener(new View.OnLongClickListener() {
@@ -672,7 +672,7 @@ public class OCRActivity extends AppCompatActivity {
                 row.addView(ll1);
                 TableRow row_space = new TableRow(this);
                 row_space.setPadding(10,10,10,10);
-                row_space.setBackgroundColor(getResources().getColor(R.color.colorSecond));
+                row_space.setBackgroundColor(getResources().getColor(R.color.Separator));
                 tableLayout.addView(row_space, 2*2-2);
 
                 tableLayout.addView(row, 2*2-1);
@@ -682,7 +682,7 @@ public class OCRActivity extends AppCompatActivity {
             currentLine = json.getJSONArray(Integer.toString(counter)).getJSONObject(0).getString("a");
             if (currentLine.equals("Total")){
                 TableRow row = new TableRow(this);
-                row.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                row.setBackgroundColor(getResources().getColor(R.color.Background));
 
                 // Add Row Option
                 row.setOnLongClickListener(new View.OnLongClickListener() {
@@ -748,7 +748,7 @@ public class OCRActivity extends AppCompatActivity {
                 row.addView(ll1);
                 TableRow row_space = new TableRow(this);
                 row_space.setPadding(10,10,10,10);
-                row_space.setBackgroundColor(getResources().getColor(R.color.colorSecond));
+                row_space.setBackgroundColor(getResources().getColor(R.color.Separator));
                 tableLayout.addView(row_space, 2*3-2);
 
                 tableLayout.addView(row, 2*3-1);
@@ -758,7 +758,7 @@ public class OCRActivity extends AppCompatActivity {
             }
             else{
                 TableRow row = new TableRow(this);
-                row.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                row.setBackgroundColor(getResources().getColor(R.color.Background));
 
                 row.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
@@ -818,7 +818,7 @@ public class OCRActivity extends AppCompatActivity {
                 row.addView(ll1);
                 TableRow row_space = new TableRow(this);
                 row_space.setPadding(10,10,10,10);
-                row_space.setBackgroundColor(getResources().getColor(R.color.colorSecond));
+                row_space.setBackgroundColor(getResources().getColor(R.color.Separator));
                 tableLayout.addView(row_space, 2*3-2);
 
                 tableLayout.addView(row, 2*3-1);
@@ -835,7 +835,7 @@ public class OCRActivity extends AppCompatActivity {
                 Log.d(TAG, Integer.toString(k));
                 Log.d(TAG, "Count: "+ Integer.toString(count));
                 final TableRow row = new TableRow(this);
-                row.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                row.setBackgroundColor(getResources().getColor(R.color.Background));
 
                 //Add and Remove Options
                 row.setOnLongClickListener(new View.OnLongClickListener() {
@@ -945,7 +945,7 @@ public class OCRActivity extends AppCompatActivity {
 
                 TableRow row_space = new TableRow(this);
                 row_space.setPadding(10,10,10,10);
-                row_space.setBackgroundColor(getResources().getColor(R.color.colorSecond));
+                row_space.setBackgroundColor(getResources().getColor(R.color.Separator));
                 tableLayout.addView(row_space, 2*k-2);
 
                 tableLayout.addView(row, 2*k-1);
@@ -1068,7 +1068,7 @@ public class OCRActivity extends AppCompatActivity {
         TableLayout tableLayout = (TableLayout) findViewById(R.id.table);
 
         TableRow row = new TableRow(this);
-        row.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+        row.setBackgroundColor(getResources().getColor(R.color.Background));
         //TableRow.LayoutParams rowParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT);
         //row.setLayoutParams(tableParams);
         //row.setPadding(10, 10, 10, 10);
@@ -1139,7 +1139,7 @@ public class OCRActivity extends AppCompatActivity {
 
         TableRow row_space = new TableRow(this);
         row_space.setPadding(10,10,10,10);
-        row_space.setBackgroundColor(getResources().getColor(R.color.colorSecond));
+        row_space.setBackgroundColor(getResources().getColor(R.color.Separator));
         tableLayout.addView(row_space, 2*count-2);
 
         tableLayout.addView(row, 2*count-1);

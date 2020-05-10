@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- colors the item when pushed-->
-    <item android:drawable="@color/colorPrimary" android:state_pressed="true"></item>
-    <item android:drawable="@color/colorPrimary" android:state_activated="true"></item>
-    <item android:drawable="@color/colorPrimary" android:state_selected="true"></item>
+    <item android:drawable="@color/Test" android:state_pressed="true"></item>
+    <item android:drawable="@color/Test3" android:state_activated="true"></item>
+    <item android:drawable="@color/Test4" android:state_selected="true"></item>
     <!-- default color-->
     <item android:drawable="@color/font"></item>
 

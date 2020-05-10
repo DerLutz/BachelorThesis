@@ -19,7 +19,7 @@
             android:id="@+id/toolbar"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            android:background="@color/colorPrimary"
+            android:background="@color/Toolbar"
             android:elevation="4dp"/>
 
         <FrameLayout
@@ -35,6 +35,7 @@
         android:layout_gravity="start"
         android:id="@+id/nav_view"
         app:menu="@menu/toolbar_main_menu"
-        app:headerLayout="@layout/nav_header"/>
+        app:headerLayout="@layout/nav_header"
+        android:background="@color/NavigationMenu"/>
 
 </androidx.drawerlayout.widget.DrawerLayout>

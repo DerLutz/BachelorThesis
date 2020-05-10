@@ -43,6 +43,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -97,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     Button GetImageFromGalleryButton, UploadImageOnServerButton, GetImageFromCameraButton, SelectButton;
     ImageView ShowSelectedImage;
     Bitmap FixBitmap;
-    String ServerUploadPath ="http://192.168.188.54:1337/cornerDetection";
+    String ServerUploadPath ="http://192.168.178.42:1337/cornerDetection";
     ProgressDialog progressDialog ;
     ByteArrayOutputStream byteArrayOutputStream ;
     byte[] byteArray ;
@@ -545,6 +546,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         alert.show();
     }
 
+    // recognizes if a item in the navigationview is pressed
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
 
@@ -554,7 +556,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch (menuItem.getItemId()) {
             case R.id.ADD:
                 Toast.makeText(getApplicationContext(),"Add Clicked",Toast.LENGTH_LONG).show();
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.AlertDialogCustom));
                 builder.setCancelable(true);
                 builder.setTitle("Select");
                 builder.setMessage("Camera or Gallaery");
@@ -597,6 +599,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment_company).commit();
 
+                drawerLayout.closeDrawers();
                 break;
 
 
@@ -614,6 +617,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 changeActivity.putExtra("CalledFrom", "0");
                 Log.d(TAG, "start ReceiptActivity");
                 startActivity(changeActivity);*/
+                drawerLayout.closeDrawers();
                 break;
 
             case R.id.PRODUCT:
@@ -629,6 +633,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 changeActivity.putExtra("CalledFrom", "0");
                 Log.d(TAG, "start ProductActivity");
                 startActivity(changeActivity);*/
+                drawerLayout.closeDrawers();
                 break;
 
             case R.id.OFFER:
@@ -639,6 +644,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment_offer).commit();
 
+                drawerLayout.closeDrawers();
 
                 /*changeActivity = new Intent(CompanyActivity.this, OfferActivity.class);
 
@@ -656,6 +662,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment_trend).commit();
 
 
+                drawerLayout.closeDrawers();
                 /*changeActivity = new Intent(CompanyActivity.this, TrendActivity.class);
 
                 changeActivity.putExtra("CalledFrom", "0");
@@ -708,7 +715,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 //row.setLayoutParams(tableParams);
                 //row.setPadding(10, 10, 10, 10);
                 //TODO Color row
-                row.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                row.setBackgroundColor(getResources().getColor(R.color.Background));
                 //row.setBackgroundColor(rgb(255, 255, 255));
 
                 final String receipt_id = json.getJSONArray(Integer.toString(k)).getJSONObject(0).getString("ID");
@@ -760,9 +767,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 //text_date.setLayoutParams(new TableLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT, 2f));
 
                 LinearLayout ll11 = new LinearLayout(this);
-                ll11.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                ll11.setBackgroundColor(getResources().getColor(R.color.Background));
                 LinearLayout ll12 = new LinearLayout(this);
-                ll12.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                ll12.setBackgroundColor(getResources().getColor(R.color.Background));
                 LinearLayout.LayoutParams param_ll11 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
 
                 LinearLayout.LayoutParams param_ll12 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
@@ -785,7 +792,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 row.addView(ll1);
                 TableRow row_space = new TableRow(this);
                 row_space.setPadding(0,2,0,2);
-                row_space.setBackgroundColor(getResources().getColor(R.color.colorSecond));
+                row_space.setBackgroundColor(getResources().getColor(R.color.Separator));
                 tableLayout.addView(row_space, 2*k-2);
 
                 tableLayout.addView(row, 2* k-1);
@@ -827,7 +834,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         TableLayout.LayoutParams tableParams = new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT);
         //tableLayout.setBackgroundColor(R.color.black);
-        tableLayout.getResources().getColor(R.color.colorPrimary);
+        tableLayout.getResources().getColor(R.color.Background);
 
         //int red = Color.parseColor("#FF0000");
         //ll.setLayoutParams(new TableLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 3f));
@@ -892,9 +899,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 //text_date.setLayoutParams(new TableLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT, 2f));
 
                 LinearLayout ll11 = new LinearLayout(this);
-                ll11.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                ll11.setBackgroundColor(getResources().getColor(R.color.Background));
                 LinearLayout ll12 = new LinearLayout(this);
-                ll12.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                ll12.setBackgroundColor(getResources().getColor(R.color.Background));
                 LinearLayout.LayoutParams param_ll11 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
 
                 LinearLayout.LayoutParams param_ll12 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
@@ -916,7 +923,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 row.addView(ll1);
                 TableRow row_space = new TableRow(this);
-                row_space.setBackgroundColor(getResources().getColor(R.color.colorSecond));
+                row_space.setBackgroundColor(getResources().getColor(R.color.Separator));
                 row_space.setPadding(0,2,0,2);
                 tableLayout.addView(row_space, 2*k-2);
 
@@ -939,258 +946,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-    private void product_visualization(StringBuilder stringBuilder){
-        Log.d(TAG, "In product_visualization");
-        //Read JSON
-        TableLayout tableLayout = (TableLayout) findViewById(R.id.table);
-        //tableLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-
-        while (true){
-            if (tableLayout.getChildAt(0) != null){
-                tableLayout.removeAllViews();
-            }
-            else {
-                break;
-            }
-        }
-        //tableLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-
-        TableLayout.LayoutParams tableParams = new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT);
-
-        //int red = Color.parseColor("#FF0000");
-        //ll.setLayoutParams(new TableLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 3f));
-        //ll.setBackgroundColor(red);
-        //Read JSON
-        try {
-            JSONObject json = new JSONObject(stringBuilder.toString());
-            int count = Integer.parseInt(json.getJSONArray("count").getJSONObject(0).getString("count"));
-            for (int k = 1; k < count + 1; k++) {
-                TableRow row = new TableRow(this);
-                //row.setPadding(10,10,10,10);
-                //TableRow.LayoutParams rowParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT);
-                //row.setLayoutParams(tableParams);
-                //row.setPadding(10, 10, 10, 10);
-                row.setBackgroundColor(rgb(255, 255, 255));
-
-                //int receipt_id = Integer.parseInt(json.getJSONArray(Integer.toString(k)).getJSONObject(0).getString("ID"));
-                //row.setId(receipt_id);
-                String receipt_name = json.getJSONArray(Integer.toString(k)).getJSONObject(0).getString("name");
-                String receipt_price = json.getJSONArray(Integer.toString(k)).getJSONObject(0).getString("price");
-                TextView text_name = new TextView(this);
-                text_name.setText(receipt_name);
-                text_name.setPadding(10, 10, 10, 10);
-                text_name.setTextSize(30f);
-                text_name.setTextColor(getResources().getColor(R.color.font));
-                //text_date.setBackgroundColor(rgb(255, 0, 0));
-                TextView text_price = new TextView(this);
-                text_price.setText(receipt_price);
-                text_price.setTextSize(30f);
-                text_price.setTextColor(getResources().getColor(R.color.font));
-                text_price.setPadding(10,10,10, 10);
-                //text_total.setBackgroundColor(rgb(0,0,255));
-
-                Log.d(TAG, receipt_name);
-                Log.d(TAG, receipt_price);
-
-                //RelativeLayout rl = new RelativeLayout(this);
-
-                //RelativeLayout.LayoutParams params_price = new RelativeLayout.LayoutParams(RelativeLayout.ALIGN_PARENT_RIGHT, TRUE);
-
-                //params_price.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, TRUE);
-                //params_price.addRule(RelativeLayout.RIGHT_OF, 1);
-
-                LinearLayout ll1 = new LinearLayout(this);
-                //ll1.setBackgroundColor(rgb(0, 255,0));
-                /*LinearLayout.LayoutParams param_ll = new LinearLayout.LayoutParams(
-                        RelativeLayout.LayoutParams.WRAP_CONTENT,
-                        RelativeLayout.LayoutParams.WRAP_CONTENT,
-                        3.0f
-                );*/
-                //rl.setLayoutParams(rowParams);
-                //product.setLayoutParams(new TableLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 2f));
-                LinearLayout.LayoutParams params_ll1 = new TableLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT, 1f);
-                LinearLayout.LayoutParams params_ll1a = new TableLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT, 2f);
-                //text_date.setLayoutParams(new TableLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT, 2f));
-
-                LinearLayout ll11 = new LinearLayout(this);
-                ll11.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-                LinearLayout ll12 = new LinearLayout(this);
-                ll12.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-                LinearLayout.LayoutParams param_ll11 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
-
-                LinearLayout.LayoutParams param_ll12 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
-
-                ll11.addView(text_name, param_ll11);
-                ll12.addView(text_price, param_ll12);
-
-                ll1.addView(ll11, params_ll1);
-                ll1.addView(ll12, params_ll1a);
-
-                //rl.addView(text_date,params);
-                //text_total.setGravity(5);   // 5 means right
-
-                //LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
-                //text_total.setBackgroundColor(rgb(0, 0, 255));
-                // Add all the rules you need
-                //param.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                //rl.addView(text_total, param);
-
-                row.addView(ll1);
-                TableRow row_space = new TableRow(this);
-                row_space.setPadding(0,2,0,2);
-                row_space.setBackgroundColor(getResources().getColor(R.color.colorSecond));
-                tableLayout.addView(row_space, 2*k-2);
-
-                tableLayout.addView(row, 2*k-1);
-
-            }
-            //c1x = json.getJSONArray("corner1").getJSONObject(0).getString("x");
-            //c1y = json.getJSONArray("corner1").getJSONObject(0).getString("y");
-
-            //size_height = json.getJSONArray("size").getJSONObject(0).getString("height");
-            //size_width = json.getJSONArray("size").getJSONObject(0).getString("width");
-
-
-            Log.d("server", "JSON read");
-        } catch (
-                JSONException e) {
-            Toast.makeText(getApplicationContext(),"Problem during connecting with internet",Toast.LENGTH_LONG).show();
-            e.printStackTrace();
-        }
-    }
-
-    private void offers_visualization(StringBuilder stringBuilder){
-        Log.d(TAG, "In offer_visualization");
-        //Read JSON
-        TableLayout tableLayout = (TableLayout) findViewById(R.id.table);
-        //tableLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-
-        while (true){
-            if (tableLayout.getChildAt(0) != null){
-                tableLayout.removeAllViews();
-            }
-            else {
-                break;
-            }
-        }
-        TableLayout.LayoutParams tableParams = new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT);
-
-        //int red = Color.parseColor("#FF0000");
-        //ll.setLayoutParams(new TableLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 3f));
-        //ll.setBackgroundColor(red);
-        //Read JSON
-        try {
-            JSONObject json = new JSONObject(stringBuilder.toString());
-            int count = Integer.parseInt(json.getJSONArray("count").getJSONObject(0).getString("count"));
-            for (int k = 1; k < count + 1; k++) {
-                TableRow row = new TableRow(this);
-                //row.setPadding(10,10,10,10);
-                //TableRow.LayoutParams rowParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT);
-                //row.setLayoutParams(tableParams);
-                //row.setPadding(10, 10, 10, 10);
-                row.setBackgroundColor(rgb(255, 255, 255));
-
-                //int receipt_id = Integer.parseInt(json.getJSONArray(Integer.toString(k)).getJSONObject(0).getString("ID"));
-                //row.setId(receipt_id);
-                String offer_name = json.getJSONArray(Integer.toString(k)).getJSONObject(0).getString("product");
-                String offer_price = json.getJSONArray(Integer.toString(k)).getJSONObject(0).getString("price");
-                String offer_vendor = json.getJSONArray(Integer.toString(k)).getJSONObject(0).getString("company");
-
-                Log.d(TAG, "offer_name: "+ offer_name);
-                TextView text_name = new TextView(this);
-                text_name.setText(offer_name);
-                text_name.setPadding(10, 10, 10, 10);
-                text_name.setTextSize(30f);
-                text_name.setTextColor(getResources().getColor(R.color.font));
-                //text_date.setBackgroundColor(rgb(255, 0, 0));
-                TextView text_total = new TextView(this);
-                text_total.setText(offer_price);
-                text_total.setTextSize(30f);
-                text_total.setTextColor(getResources().getColor(R.color.font));
-                text_total.setPadding(10,10,10, 10);
-                //text_total.setTextColor(rgb(0,0,0));
-                //text_total.setBackgroundColor(rgb(0,0,255));
-
-                TextView text_vendor = new TextView(this);
-                text_vendor.setText(offer_vendor);
-                text_vendor.setPadding(10, 10, 10, 10);
-                text_vendor.setTextSize(20f);
-                text_vendor.setTextColor(getResources().getColor(R.color.font));
-                text_vendor.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-                //text_vendor.setTextColor(rgb(0,0,0));
-                //text_vendor.setBackgroundColor(rgb(255,255,255));
-
-                //RelativeLayout rl = new RelativeLayout(this);
-
-                //RelativeLayout.LayoutParams params_price = new RelativeLayout.LayoutParams(RelativeLayout.ALIGN_PARENT_RIGHT, TRUE);
-
-                //params_price.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, TRUE);
-                //params_price.addRule(RelativeLayout.RIGHT_OF, 1);
-
-                LinearLayout ll1 = new LinearLayout(this);
-                //ll1.setBackgroundColor(rgb(0, 255,0));
-                /*LinearLayout.LayoutParams param_ll = new LinearLayout.LayoutParams(
-                        RelativeLayout.LayoutParams.WRAP_CONTENT,
-                        RelativeLayout.LayoutParams.WRAP_CONTENT,
-                        3.0f
-                );*/
-                //rl.setLayoutParams(rowParams);
-                //product.setLayoutParams(new TableLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 2f));
-                LinearLayout.LayoutParams params_ll1 = new TableLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT, 1f);
-                LinearLayout.LayoutParams params_ll1a = new TableLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT, 2f);
-                //text_date.setLayoutParams(new TableLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT, 2f));
-
-                LinearLayout ll11 = new LinearLayout(this);
-                ll11.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-                LinearLayout ll12 = new LinearLayout(this);
-                ll12.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-                LinearLayout.LayoutParams param_ll11 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
-
-                LinearLayout.LayoutParams param_ll12 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
-
-                ll11.addView(text_name, param_ll11);
-                ll12.addView(text_total, param_ll12);
-
-                ll1.addView(ll11, params_ll1);
-                ll1.addView(ll12, params_ll1a);
-
-                //rl.addView(text_date,params);
-                //text_total.setGravity(5);   // 5 means right
-
-                //LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
-                //text_total.setBackgroundColor(rgb(0, 0, 255));
-                // Add all the rules you need
-                //param.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                //rl.addView(text_total, param);
-
-                LinearLayout ll0 = new LinearLayout(this);
-                ll0.setOrientation(LinearLayout.VERTICAL);
-                ll0.addView(ll1);
-                ll0.addView(text_vendor);
-                row.addView(ll0);
-
-                TableRow row_space = new TableRow(this);
-                row_space.setPadding(0,2,0,2);
-                row_space.setBackgroundColor(getResources().getColor(R.color.colorSecond));
-                tableLayout.addView(row_space, 2*k-2);
-
-                tableLayout.addView(row, 2*k-1);
-
-            }
-            //c1x = json.getJSONArray("corner1").getJSONObject(0).getString("x");
-            //c1y = json.getJSONArray("corner1").getJSONObject(0).getString("y");
-
-            //size_height = json.getJSONArray("size").getJSONObject(0).getString("height");
-            //size_width = json.getJSONArray("size").getJSONObject(0).getString("width");
-
-
-            Log.d(TAG, "JSON read");
-        } catch (
-                JSONException e) {
-            Toast.makeText(getApplicationContext(),"Problem during connecting with internet",Toast.LENGTH_LONG).show();
-            e.printStackTrace();
-        }
-    }
 
     private void updateView (String category, String extra) {
         Log.d(TAG, "In onOptionsItemSelected");

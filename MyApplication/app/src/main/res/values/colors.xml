@@ -1,13 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#000000</color>
-    <color name="colorSecond">#424242</color>
+    <!--color name="colorPrimary">#000000</color-->
+    <color name="Test">#FEDCBA</color>
+    <color name="Background">#000000</color>
+    <color name="Toolbar">#0000FF</color>
+    <color name="NavigationHeader">#000080</color>
+    <color name="Separator">#0000FF</color>
+    <color name="GraphView">#424242</color>
+
+
+    <!--color name="colorSecond">#424242</color-->
+    <color name="NavigationMenu">#0000FF</color>
+    <color name="Test3">#424242</color>
+    <color name="Test4">#FF0000</color>
     <color name="font">#FFFFFF</color>
     <color name="colorAccent">#FF4081</color>
 
     <!-- http://meyerweb.com/eric/tools/color-blend/#339999::1:hex -->
     <color name="orange">#FF9933</color>
     <color name="purple">#FF4081</color>
+
+    <color name="plot0">#FF0000</color>
+    <color name="plot1">#0000FF</color>
+    <color name="plot2">#FFFF00</color>
+    <color name="plot3">#00FF00</color>
+    <color name="plot4">#FF00FF</color>
 
 
 </resources>

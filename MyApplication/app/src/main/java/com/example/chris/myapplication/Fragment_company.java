@@ -70,7 +70,7 @@ public class Fragment_company extends Fragment {
 
         TableLayout.LayoutParams tableParams = new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT);
         //tableLayout.setBackgroundColor(R.color.black);
-        tableLayout.getResources().getColor(R.color.colorPrimary);
+        tableLayout.getResources().getColor(R.color.Background);
 
         //int red = Color.parseColor("#FF0000");
         //ll.setLayoutParams(new TableLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 3f));
@@ -139,9 +139,9 @@ public class Fragment_company extends Fragment {
                 //text_date.setLayoutParams(new TableLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT, 2f));
 
                 LinearLayout ll11 = new LinearLayout(getActivity());
-                ll11.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                ll11.setBackgroundColor(getResources().getColor(R.color.Background));
                 LinearLayout ll12 = new LinearLayout(getActivity());
-                ll12.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                ll12.setBackgroundColor(getResources().getColor(R.color.Background));
                 LinearLayout.LayoutParams param_ll11 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
 
                 LinearLayout.LayoutParams param_ll12 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
@@ -163,7 +163,7 @@ public class Fragment_company extends Fragment {
 
                 row.addView(ll1);
                 TableRow row_space = new TableRow(getActivity());
-                row_space.setBackgroundColor(getResources().getColor(R.color.colorSecond));
+                row_space.setBackgroundColor(getResources().getColor(R.color.Separator));
                 row_space.setPadding(0,2,0,2);
                 tableLayout.addView(row_space, 2*k-2);
 

@@ -124,9 +124,9 @@ public class Fragment_product extends Fragment {
                 //text_date.setLayoutParams(new TableLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT, 2f));
 
                 LinearLayout ll11 = new LinearLayout(getActivity());
-                ll11.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                ll11.setBackgroundColor(getResources().getColor(R.color.Background));
                 LinearLayout ll12 = new LinearLayout(getActivity());
-                ll12.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                ll12.setBackgroundColor(getResources().getColor(R.color.Background));
                 LinearLayout.LayoutParams param_ll11 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
 
                 LinearLayout.LayoutParams param_ll12 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
@@ -149,7 +149,7 @@ public class Fragment_product extends Fragment {
                 row.addView(ll1);
                 TableRow row_space = new TableRow(getActivity());
                 row_space.setPadding(0,2,0,2);
-                row_space.setBackgroundColor(getResources().getColor(R.color.colorSecond));
+                row_space.setBackgroundColor(getResources().getColor(R.color.Separator));
                 tableLayout.addView(row_space, 2*k-2);
 
                 tableLayout.addView(row, 2*k-1);

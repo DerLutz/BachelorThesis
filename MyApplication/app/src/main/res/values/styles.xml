@@ -7,14 +7,19 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorSecond</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/Test</item>
+        <item name="colorPrimaryDark">@color/Test3</item>
+        <item name="colorAccent">@color/Test4</item>
     </style>
 
 
-    <style name="ForRecycleView">
-        <item name="android:padding">2dp</item>
+    <style name="AlertDialogCustom" parent="@android:style/Theme.Dialog">
+        <item name="android:textColor">@color/font</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:headerDividersEnabled">true</item>
+        <item name="android:typeface">normal</item>
+        <item name="android:background">@color/NavigationHeader</item>
+        <item name="android:colorButtonNormal">@color/font</item>
     </style>
 
 </resources>

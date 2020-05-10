@@ -86,6 +86,7 @@ public class Fragment_offer extends Fragment {
                 String offer_name = json.getJSONArray(Integer.toString(k)).getJSONObject(0).getString("product");
                 String offer_price = json.getJSONArray(Integer.toString(k)).getJSONObject(0).getString("price");
                 String offer_vendor = json.getJSONArray(Integer.toString(k)).getJSONObject(0).getString("company");
+                String offer_date = json.getJSONArray(Integer.toString(k)).getJSONObject(0).getString("date");
 
                 Log.d(TAG, "offer_name: "+ offer_name);
                 TextView text_name = new TextView(getActivity());
@@ -107,10 +108,16 @@ public class Fragment_offer extends Fragment {
                 text_vendor.setPadding(10, 10, 10, 10);
                 text_vendor.setTextSize(20f);
                 text_vendor.setTextColor(getResources().getColor(R.color.font));
-                text_vendor.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                text_vendor.setBackgroundColor(getResources().getColor(R.color.Background));
                 //text_vendor.setTextColor(rgb(0,0,0));
                 //text_vendor.setBackgroundColor(rgb(255,255,255));
 
+                TextView text_date = new TextView(getActivity());
+                text_date.setText(offer_date);
+                text_date.setPadding(10, 10, 10, 10);
+                text_date.setTextSize(20f);
+                text_date.setTextColor(getResources().getColor(R.color.font));
+                text_date.setBackgroundColor(getResources().getColor(R.color.Background));
                 //RelativeLayout rl = new RelativeLayout(this);
 
                 //RelativeLayout.LayoutParams params_price = new RelativeLayout.LayoutParams(RelativeLayout.ALIGN_PARENT_RIGHT, TRUE);
@@ -129,12 +136,11 @@ public class Fragment_offer extends Fragment {
                 //product.setLayoutParams(new TableLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 2f));
                 LinearLayout.LayoutParams params_ll1 = new TableLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT, 1f);
                 LinearLayout.LayoutParams params_ll1a = new TableLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT, 2f);
-                //text_date.setLayoutParams(new TableLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT, 2f));
 
                 LinearLayout ll11 = new LinearLayout(getActivity());
-                ll11.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                ll11.setBackgroundColor(getResources().getColor(R.color.Background));
                 LinearLayout ll12 = new LinearLayout(getActivity());
-                ll12.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                ll12.setBackgroundColor(getResources().getColor(R.color.Background));
                 LinearLayout.LayoutParams param_ll11 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
 
                 LinearLayout.LayoutParams param_ll12 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
@@ -153,16 +159,33 @@ public class Fragment_offer extends Fragment {
                 // Add all the rules you need
                 //param.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
                 //rl.addView(text_total, param);
+                LinearLayout ll2 = new LinearLayout(getActivity());
+                LinearLayout.LayoutParams params_ll2 = new TableLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT, 1f);
+                LinearLayout.LayoutParams params_ll2a = new TableLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT, 2f);
+
+                LinearLayout ll21 = new LinearLayout(getActivity());
+                ll21.setBackgroundColor(getResources().getColor(R.color.Background));
+                LinearLayout ll22 = new LinearLayout(getActivity());
+                ll22.setBackgroundColor(getResources().getColor(R.color.Background));
+                LinearLayout.LayoutParams param_ll21 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
+
+                LinearLayout.LayoutParams param_ll22 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
+
+                ll21.addView(text_vendor, param_ll21);
+                ll22.addView(text_date, param_ll22);
+
+                ll2.addView(ll21, params_ll2);
+                ll2.addView(ll22, params_ll2a);
 
                 LinearLayout ll0 = new LinearLayout(getActivity());
                 ll0.setOrientation(LinearLayout.VERTICAL);
                 ll0.addView(ll1);
-                ll0.addView(text_vendor);
+                ll0.addView(ll2);
                 row.addView(ll0);
 
                 TableRow row_space = new TableRow(getActivity());
                 row_space.setPadding(0,2,0,2);
-                row_space.setBackgroundColor(getResources().getColor(R.color.colorSecond));
+                row_space.setBackgroundColor(getResources().getColor(R.color.Separator));
                 tableLayout.addView(row_space, 2*k-2);
 
                 tableLayout.addView(row, 2*k-1);

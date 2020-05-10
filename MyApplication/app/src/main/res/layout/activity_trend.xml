@@ -20,14 +20,14 @@
             android:id="@+id/toolbar"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            android:background="@color/colorSecond"
+            android:background="@color/Toolbar"
             android:elevation="4dp"/>
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/fragment_container"
-            android:background="@color/colorPrimary"/>
+            android:background="@color/Test"/>
 
     </LinearLayout>
 
@@ -39,6 +39,6 @@
         app:menu="@menu/toolbar_main_menu"
         app:headerLayout="@layout/nav_header"
         app:itemTextColor="@color/font"
-        android:background="@color/colorSecond"/>
+        android:background="@color/NavigationMenu"/>
 
 </androidx.drawerlayout.widget.DrawerLayout>
