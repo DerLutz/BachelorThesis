@@ -90,27 +90,25 @@ public class CornerActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
 
-        uri = intent.getStringExtra(MainActivity.URI_FILE);
+        uri = intent.getStringExtra(CompanyActivity.URI_FILE);
         Log.d(TAG, uri);
 
         try {
 
 
-            c1x = intent.getStringExtra(MainActivity.X1);
+            c1x = intent.getStringExtra(CompanyActivity.X1);
 
-            c1y = intent.getStringExtra(MainActivity.Y1);
-            c2x = intent.getStringExtra(MainActivity.X2);
-            c2y = intent.getStringExtra(MainActivity.Y2);
-            c3x = intent.getStringExtra(MainActivity.X3);
-            c3y = intent.getStringExtra(MainActivity.Y3);
-            c4x = intent.getStringExtra(MainActivity.X4);
-            c4y = intent.getStringExtra(MainActivity.Y4);
+            c1y = intent.getStringExtra(CompanyActivity.Y1);
+            c2x = intent.getStringExtra(CompanyActivity.X2);
+            c2y = intent.getStringExtra(CompanyActivity.Y2);
+            c3x = intent.getStringExtra(CompanyActivity.X3);
+            c3y = intent.getStringExtra(CompanyActivity.Y3);
+            c4x = intent.getStringExtra(CompanyActivity.X4);
+            c4y = intent.getStringExtra(CompanyActivity.Y4);
 
-            size_height = intent.getStringExtra(MainActivity.SH);
-            size_width = intent.getStringExtra(MainActivity.SW);
+            size_height = intent.getStringExtra(CompanyActivity.SH);
+            size_width = intent.getStringExtra(CompanyActivity.SW);
 
-            orientation= intent.getStringExtra(MainActivity.O);
-            Log.d(TAG, "Orientation: "+orientation);
         }
         catch (Exception e){
             e.printStackTrace();
@@ -261,7 +259,7 @@ public class CornerActivity extends AppCompatActivity {
         }
 
         if (id==R.id.back){
-            Intent intent = new Intent(this, MainActivity.class);
+            Intent intent = new Intent(this, CompanyActivity.class);
             startActivity(intent);
         }
         return super.onOptionsItemSelected(item);

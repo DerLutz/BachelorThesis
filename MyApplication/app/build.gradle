@@ -33,6 +33,7 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment:2.0.0'
     implementation 'androidx.navigation:navigation-ui:2.0.0'
 
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
     //For plot
     implementation 'com.jjoe64:graphview:4.2.2'
     implementation 'joda-time:joda-time:2.9.4'

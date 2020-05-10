@@ -256,7 +256,7 @@ public class OCRActivity extends AppCompatActivity {
 
         if (id == R.id.save) {
             save();
-            Intent intent = new Intent(this, MainActivity.class);
+            Intent intent = new Intent(this, CompanyActivity.class);
             intent.putExtra("CallFrom", "0");
             startActivity(intent);
         }

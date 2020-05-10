@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -52,7 +53,7 @@ import java.util.Date;
 
 import javax.net.ssl.HttpsURLConnection;
 
-import static com.example.chris.myapplication.MainActivity.MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE;
+//import static com.example.chris.myapplication.MainActivity.MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE;
 
 public class CompanyActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -133,8 +134,8 @@ public class CompanyActivity extends AppCompatActivity implements NavigationView
 
         switch (menuItem.getItemId()) {
             case R.id.ADD:
-                Toast.makeText(getApplicationContext(), "Add Clicked", Toast.LENGTH_LONG).show();
-                AlertDialog.Builder builder = new AlertDialog.Builder(CompanyActivity.this);
+                Toast.makeText(getApplicationContext(),"Add Clicked",Toast.LENGTH_LONG).show();
+                AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.AlertDialogCustom));
                 builder.setCancelable(true);
                 builder.setTitle("Select");
                 builder.setMessage("Camera or Gallaery");

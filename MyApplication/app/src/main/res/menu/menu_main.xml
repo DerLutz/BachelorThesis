@@ -9,6 +9,7 @@
         android:id="@+id/action_name"
         android:title="Crop"
         android:icon="@drawable/ic_content_cut_black_24dp"
+        android:visible="true"
         android:background="@color/font"/>
 
     <item
