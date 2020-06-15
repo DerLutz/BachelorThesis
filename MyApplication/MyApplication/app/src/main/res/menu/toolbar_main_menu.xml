@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ShowIn="navigation_view">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/ADD"
+            android:title="Add Receipt" />
+        <item
+            android:id="@+id/COMPANY"
+            android:title="Company"/>
+        <item
+            android:id="@+id/RECEIPT"
+            android:title="Receipt"/>
+        <item
+            android:id="@+id/PRODUCT"
+            android:title="Product"/>
+        <item
+            android:id="@+id/OFFER"
+            android:title="Offers"/>
+
+    </group>
+
+        <item
+            android:id="@+id/TREND"
+            android:title="Trends"/>
+
+
+</menu>

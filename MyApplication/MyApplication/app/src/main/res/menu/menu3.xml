@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+
+    <item
+        android:id="@+id/save"
+        android:title="Save"
+        android:textColor="@color/font"/>
+
+    <item
+        android:id="@+id/back"
+        android:title="Back "/>
+
+</menu>

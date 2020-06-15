@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:ShowIn="navigation_view">
+    <group android:checkableBehavior="single">
+
+    <item
+        android:id="@+id/action_name"
+        android:title="Crop"
+        android:icon="@drawable/ic_content_cut_black_24dp"
+        android:visible="true"
+        android:background="@color/font"/>
+
+    <item
+        android:id="@+id/back"
+        android:title="Back "
+        android:icon="@drawable/ic_arrow_back_black_24dp"/>
+
+    </group>
+</menu>

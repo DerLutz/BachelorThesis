@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/ocr_activity"
+    tools:context=".OCRActivity"
+    android:orientation="vertical"
+    android:background="@color/Background">
+
+    <androidx.appcompat.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:id="@+id/toolbar"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        android:background="@color/Toolbar"
+        android:elevation="4dp"
+        app:menu="@menu/menu3" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="Results"
+        android:gravity="center"
+        android:textSize="30dp"
+        android:id="@+id/result"
+        android:background="@color/Background"
+        android:textColor="@color/font"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/scrollView"
+        android:padding="5dp"
+        android:background="@color/Separator">
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/table"
+            android:stretchColumns="*">
+
+
+        </TableLayout>
+
+    </ScrollView>
+
+</LinearLayout>
